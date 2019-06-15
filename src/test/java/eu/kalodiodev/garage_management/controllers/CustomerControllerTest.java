@@ -89,6 +89,6 @@ class CustomerControllerTest {
         mockMvc.perform(post("/customers").param("name", "John Doe"))
                 .andExpect(model().hasNoErrors())
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/customers"));
+                .andExpect(view().name("redirect:/customers/" + customer.getId()));
     }
 }

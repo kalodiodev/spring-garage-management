@@ -48,6 +48,6 @@ public class CustomerController {
 
         Customer customer = customerService.save(customerCommand);
 
-        return "redirect:/customers";
+        return "redirect:/customers/" + customer.getId();
     }
 }
