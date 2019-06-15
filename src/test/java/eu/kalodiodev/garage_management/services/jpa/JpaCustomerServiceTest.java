@@ -1,5 +1,7 @@
 package eu.kalodiodev.garage_management.services.jpa;
 
+import eu.kalodiodev.garage_management.command.CustomerCommand;
+import eu.kalodiodev.garage_management.converter.CustomerCommandToCustomer;
 import eu.kalodiodev.garage_management.domains.Customer;
 import eu.kalodiodev.garage_management.repositories.CustomerRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -20,6 +23,9 @@ class JpaCustomerServiceTest {
 
     @Mock
     CustomerRepository customerRepository;
+
+    @Mock
+    CustomerCommandToCustomer customerCommandToCustomer;
 
     @InjectMocks
     JpaCustomerServiceImpl customerService;
@@ -38,5 +44,16 @@ class JpaCustomerServiceTest {
         List<Customer> customers = customerService.all();
 
         assertEquals(1, customers.size());
+    }
+
+    @Test
+    void save_customer_command() {
+        Customer customer = new Customer();
+        customer.setId(1L);
+
+        when(customerCommandToCustomer.convert(any(CustomerCommand.class))).thenReturn(new Customer());
+        when(customerRepository.save(any(Customer.class))).thenReturn(customer);
+
+        assertEquals(customer, customerService.save(new CustomerCommand()));
     }
 }
