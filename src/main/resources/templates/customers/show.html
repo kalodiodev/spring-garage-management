@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Garage Management - Customer</title>
+</head>
+<body>
+    <h1>Customer</h1>
+    <hr>
+    <table>
+        <tr><th>Name</th><td th:text="${customer.name}">John Doe</td></tr>
+        <tr><th>Address</th><td th:text="${customer.address}">Wall Street</td></tr>
+        <tr><th>City</th><td th:text="${customer.city}">New York</td></tr>
+        <tr><th>Country</th><td th:text="${customer.country}">USA</td></tr>
+        <tr><th>Phone</th><td th:text="${customer.phone}">2435444</td></tr>
+        <tr><th>Email</th><td th:text="${customer.email}">john@example.com</td></tr>
+        <tr><th>Comment</th><td th:text="${customer.comment}">Comment</td></tr>
+    </table>
+
+    <a href="/customers">Back to Customers</a>
+</body>
+</html>

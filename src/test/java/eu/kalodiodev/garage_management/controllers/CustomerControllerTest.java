@@ -17,6 +17,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -55,6 +56,19 @@ class CustomerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("customers/index"))
                 .andExpect(model().attribute("customers", hasSize(1)));
+    }
+
+    @Test
+    void displayCustomer() throws Exception {
+        Customer customer = new Customer();
+        customer.setId(1L);
+
+        when(customerService.findById(anyLong())).thenReturn(customer);
+
+        mockMvc.perform(get("/customers/1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("customers/show"))
+                .andExpect(model().attribute("customer", customer));
     }
 
     @Test

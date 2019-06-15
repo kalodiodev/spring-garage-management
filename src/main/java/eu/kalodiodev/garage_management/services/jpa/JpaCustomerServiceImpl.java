@@ -8,6 +8,7 @@ import eu.kalodiodev.garage_management.services.CustomerService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class JpaCustomerServiceImpl implements CustomerService {
@@ -30,5 +31,12 @@ public class JpaCustomerServiceImpl implements CustomerService {
     @Override
     public Customer save(CustomerCommand customerCommand) {
         return customerRepository.save(customerCommandToCustomer.convert(customerCommand));
+    }
+
+    @Override
+    public Customer findById(Long id) {
+        Optional<Customer> customerOptional = customerRepository.findById(id);
+
+        return customerOptional.orElse(null);
     }
 }

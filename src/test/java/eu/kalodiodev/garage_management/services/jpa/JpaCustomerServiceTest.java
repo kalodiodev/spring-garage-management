@@ -13,9 +13,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -55,5 +57,16 @@ class JpaCustomerServiceTest {
         when(customerRepository.save(any(Customer.class))).thenReturn(customer);
 
         assertEquals(customer, customerService.save(new CustomerCommand()));
+    }
+
+    @Test
+    void find_customer_by_id() {
+        Customer customer = new Customer();
+        customer.setId(1L);
+        Optional<Customer> optionalCustomer = Optional.of(customer);
+
+        when(customerRepository.findById(anyLong())).thenReturn(optionalCustomer);
+
+        assertEquals(customer, customerService.findById(1L));
     }
 }
