@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/app :: layout(~{::title}, ~{::section})}">
 <head>
-    <meta charset="UTF-8">
     <title>Garage Management - Customer</title>
 </head>
 <body>
+<section>
     <h1>Customer</h1>
     <hr>
     <table>
@@ -17,6 +18,7 @@
         <tr><th>Comment</th><td th:text="${customer.comment}">Comment</td></tr>
     </table>
 
-    <a href="/customers">Back to Customers</a>
+    <a class="btn btn-primary" href="/customers">Back to Customers</a>
+</section>
 </body>
 </html>

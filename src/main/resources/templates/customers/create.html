@@ -1,39 +1,73 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/app :: layout(~{::title}, ~{::section})}">
 <head>
-    <meta charset="UTF-8">
     <title>Garage Management - Create Customer</title>
 </head>
 <body>
+<section>
     <h1>Create Customer</h1>
     <hr>
 
     <form action="/customers" method="post" th:object="${customerCommand}">
-        <label for="name">Name</label>
-        <input id="name" name="name" type="text" th:field="*{name}" />
+        <div class="form-group row">
+            <label for="name" class="col-md-2 col-form-label text-md-right">Name</label>
+            <div class="col-md-8">
+                <input id="name" class="form-control" name="name" type="text" th:field="*{name}" />
+            </div>
+        </div>
 
-        <label for="address">Address</label>
-        <input id="address" name="address" type="text" th:field="*{address}" />
+        <div class="form-group row">
+            <label for="address" class="col-md-2 col-form-label text-md-right">Address</label>
+            <div class="col-md-8">
+                <input id="address" class="form-control" name="address" type="text" th:field="*{address}" />
+            </div>
+        </div>
 
-        <label for="city">City</label>
-        <input id="city" name="city" type="text" th:field="*{city}" />
+        <div class="form-group row">
+            <label for="city" class="col-md-2 col-form-label text-md-right">City</label>
+            <div class="col-md-8">
+                <input id="city" class="form-control" name="city" type="text" th:field="*{city}" />
+            </div>
+        </div>
 
-        <label for="postcode">Postcode</label>
-        <input id="postcode" name="postcode" type="text" th:field="*{postcode}" />
+        <div class="form-group row">
+            <label for="postcode" class="col-md-2 col-form-label text-md-right">Postcode</label>
+            <div class="col-md-8">
+                <input id="postcode" class="form-control" name="postcode" type="text" th:field="*{postcode}" />
+            </div>
+        </div>
 
-        <label for="country">Country</label>
-        <input id="country" name="country" type="text" th:field="*{country}" />
+        <div class="form-group row">
+            <label for="country" class="col-md-2 col-form-label text-md-right">Country</label>
+            <div class="col-md-8">
+                <input id="country" class="form-control" name="country" type="text" th:field="*{country}" />
+            </div>
+        </div>
 
-        <label for="phone">Phone</label>
-        <input id="phone" name="phone" type="text" th:field="*{phone}" />
+        <div class="form-group row">
+            <label for="phone" class="col-md-2 col-form-label text-md-right">Phone</label>
+            <div class="col-md-8">
+                <input id="phone" class="form-control" name="phone" type="text" th:field="*{phone}" />
+            </div>
+        </div>
 
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" th:field="*{email}" />
+        <div class="form-group row">
+            <label for="email" class="col-md-2 col-form-label text-md-right">Email</label>
+            <div class="col-md-8">
+                <input id="email" class="form-control" name="email" type="email" th:field="*{email}" />
+            </div>
+        </div>
 
-        <label for="comment">Comment</label>
-        <textarea id="comment" name="comment" th:value="*{comment}"></textarea>
+        <div class="form-group row">
+            <label for="comment" class="col-md-2 col-form-label text-md-right">Comment</label>
+            <div class="col-md-8">
+                <textarea id="comment" class="form-control" name="comment" th:value="*{comment}"></textarea>
+            </div>
+        </div>
 
-        <button type="submit">Save</button>
+        <button class="btn btn-primary" type="submit">Save</button>
     </form>
+</section>
 </body>
 </html>

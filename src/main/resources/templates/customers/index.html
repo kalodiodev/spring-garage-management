@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/app :: layout(~{::title}, ~{::section})}">
 <head>
-    <meta charset="UTF-8">
     <title>Garage Management - Customers</title>
 </head>
 <body>
+<section>
     <h1>Customers</h1>
     <hr>
 
-    <table>
+    <table class="table table-hover">
         <thead>
             <tr>
                 <th>ID</th>
@@ -28,7 +29,9 @@
         </tbody>
     </table>
 
-    <a href="/customers/create">Add Customer</a>
+    <div class="text-center" th:if="${customers.size() == 0}">No Customers</div>
 
+    <a class="btn btn-primary" href="/customers/create">Add Customer</a>
+</section>
 </body>
 </html>
