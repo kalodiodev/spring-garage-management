@@ -3,6 +3,7 @@ package eu.kalodiodev.garage_management.services.jpa;
 import eu.kalodiodev.garage_management.NotFoundException;
 import eu.kalodiodev.garage_management.command.CustomerCommand;
 import eu.kalodiodev.garage_management.converter.CustomerCommandToCustomer;
+import eu.kalodiodev.garage_management.converter.CustomerToCustomerCommand;
 import eu.kalodiodev.garage_management.domains.Customer;
 import eu.kalodiodev.garage_management.repositories.CustomerRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +20,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class JpaCustomerServiceTest {
@@ -29,6 +30,9 @@ class JpaCustomerServiceTest {
 
     @Mock
     CustomerCommandToCustomer customerCommandToCustomer;
+
+    @Mock
+    CustomerToCustomerCommand customerToCustomerCommand;
 
     @InjectMocks
     JpaCustomerServiceImpl customerService;
@@ -76,5 +80,50 @@ class JpaCustomerServiceTest {
         when(customerRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> customerService.findById(1L));
+    }
+
+    @Test
+    void find_customer_command_by_id() {
+        Customer customer = new Customer();
+        customer.setId(1L);
+
+        CustomerCommand customerCommand = new CustomerCommand();
+        customerCommand.setId(1L);
+
+        when(customerRepository.findById(anyLong())).thenReturn(Optional.of(customer));
+        when(customerToCustomerCommand.convert(any(Customer.class))).thenReturn(customerCommand);
+
+        assertEquals(customerCommand, customerService.findCommandById(1L));
+    }
+
+    @Test
+    void not_found_customer_command() {
+        when(customerRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> customerService.findCommandById(1L));
+    }
+
+    @Test
+    void update_customer() {
+        CustomerCommand customerCommand = new CustomerCommand();
+        customerCommand.setId(1L);
+        customerCommand.setName("John Doe");
+
+        when(customerRepository.findById(1L)).thenReturn(Optional.of(new Customer()));
+        when(customerCommandToCustomer.convert(any(CustomerCommand.class))).thenReturn(new Customer());
+
+        customerService.update(customerCommand);
+
+        verify(customerRepository, times(1)).save(any(Customer.class));
+    }
+
+    @Test
+    void not_found_customer_to_update() {
+        CustomerCommand customerCommand = new CustomerCommand();
+        customerCommand.setId(1L);
+
+        when(customerRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> customerService.update(customerCommand));
     }
 }

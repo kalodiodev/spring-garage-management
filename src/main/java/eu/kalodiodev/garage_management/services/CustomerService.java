@@ -12,4 +12,8 @@ public interface CustomerService {
     Customer save(CustomerCommand customerCommand);
 
     Customer findById(Long id);
+
+    CustomerCommand findCommandById(Long id);
+
+    void update(CustomerCommand customerCommand);
 }

@@ -18,7 +18,8 @@
         <tr><th>Comment</th><td th:text="${customer.comment}">Comment</td></tr>
     </table>
 
-    <a class="btn btn-primary" href="/customers">Back to Customers</a>
+    <a href="/customers">Back to Customers</a>
+    <a class="btn btn-warning" th:href="${'/customers/' + customer.id + '/edit'}">Edit</a>
 </section>
 </body>
 </html>

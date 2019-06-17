@@ -19,9 +19,9 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -73,7 +73,7 @@ class CustomerControllerTest {
     }
 
     @Test
-    void customerNotFound() throws Exception {
+    void displayCustomerNotFound() throws Exception {
         when(customerService.findById(anyLong())).thenThrow(new NotFoundException("Customer not found"));
 
         mockMvc.perform(get("/customers/1"))
@@ -100,4 +100,35 @@ class CustomerControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/customers/" + customer.getId()));
     }
+
+    @Test
+    void initUpdateCustomer() throws Exception {
+        CustomerCommand customerCommand = new CustomerCommand();
+        customerCommand.setId(1L);
+
+        when(customerService.findCommandById(1L)).thenReturn(customerCommand);
+
+        mockMvc.perform(get("/customers/1/edit"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("customers/edit"))
+                .andExpect(model().attributeExists("customerCommand"));
+    }
+
+    @Test
+    void editCustomerNotFound() throws Exception {
+        when(customerService.findCommandById(anyLong())).thenThrow(new NotFoundException("Customer not found"));
+
+        mockMvc.perform(get("/customers/1/edit"))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void updateCustomer() throws Exception {
+        mockMvc.perform(patch("/customers/1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/customers/1"));
+
+        verify(customerService).update(any(CustomerCommand.class));
+    }
+
 }

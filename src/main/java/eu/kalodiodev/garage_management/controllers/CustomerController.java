@@ -6,6 +6,7 @@ import eu.kalodiodev.garage_management.services.CustomerService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -15,6 +16,7 @@ public class CustomerController {
     private static final String VIEW_CUSTOMERS_INDEX = "customers/index";
     private static final String VIEW_CUSTOMER_CREATE = "customers/create";
     private static final String VIEW_CUSTOMER_SHOW = "customers/show";
+    private static final String VIEW_CUSTOMER_EDIT = "customers/edit";
 
     private final CustomerService customerService;
 
@@ -49,5 +51,21 @@ public class CustomerController {
         Customer customer = customerService.save(customerCommand);
 
         return "redirect:/customers/" + customer.getId();
+    }
+
+    @GetMapping("customers/{id}/edit")
+    public String editCustomer(@PathVariable Long id, Model model) {
+        model.addAttribute("customerCommand", customerService.findCommandById(id));
+
+        return VIEW_CUSTOMER_EDIT;
+    }
+
+    @PatchMapping("customers/{id}")
+    public String updateCustomer(@PathVariable Long id, CustomerCommand customerCommand) {
+
+        customerCommand.setId(id);
+        customerService.update(customerCommand);
+
+        return "redirect:/customers/" + id;
     }
 }
