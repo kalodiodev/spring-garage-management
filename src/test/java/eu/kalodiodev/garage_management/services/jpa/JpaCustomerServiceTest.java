@@ -1,5 +1,6 @@
 package eu.kalodiodev.garage_management.services.jpa;
 
+import eu.kalodiodev.garage_management.NotFoundException;
 import eu.kalodiodev.garage_management.command.CustomerCommand;
 import eu.kalodiodev.garage_management.converter.CustomerCommandToCustomer;
 import eu.kalodiodev.garage_management.domains.Customer;
@@ -68,5 +69,12 @@ class JpaCustomerServiceTest {
         when(customerRepository.findById(anyLong())).thenReturn(optionalCustomer);
 
         assertEquals(customer, customerService.findById(1L));
+    }
+
+    @Test
+    void not_found_customer() {
+        when(customerRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> customerService.findById(1L));
     }
 }

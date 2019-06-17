@@ -1,5 +1,6 @@
 package eu.kalodiodev.garage_management.controllers;
 
+import eu.kalodiodev.garage_management.NotFoundException;
 import eu.kalodiodev.garage_management.command.CustomerCommand;
 import eu.kalodiodev.garage_management.domains.Customer;
 import eu.kalodiodev.garage_management.services.CustomerService;
@@ -69,6 +70,14 @@ class CustomerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("customers/show"))
                 .andExpect(model().attribute("customer", customer));
+    }
+
+    @Test
+    void customerNotFound() throws Exception {
+        when(customerService.findById(anyLong())).thenThrow(new NotFoundException("Customer not found"));
+
+        mockMvc.perform(get("/customers/1"))
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
