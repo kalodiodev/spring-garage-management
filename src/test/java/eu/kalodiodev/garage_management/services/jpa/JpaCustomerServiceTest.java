@@ -126,4 +126,26 @@ class JpaCustomerServiceTest {
 
         assertThrows(NotFoundException.class, () -> customerService.update(customerCommand));
     }
+
+    @Test
+    void delete_customer() {
+        Customer customer = new Customer();
+        customer.setId(1L);
+
+        when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
+
+        customerService.delete(1L);
+
+        verify(customerRepository, times(1)).delete(customer);
+    }
+
+    @Test
+    void not_found_customer_to_delete() {
+        Customer customer = new Customer();
+        customer.setId(1L);
+
+        when(customerRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> customerService.delete(1L));
+    }
 }

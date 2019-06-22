@@ -5,10 +5,7 @@ import eu.kalodiodev.garage_management.domains.Customer;
 import eu.kalodiodev.garage_management.services.CustomerService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class CustomerController {
@@ -67,5 +64,12 @@ public class CustomerController {
         customerService.update(customerCommand);
 
         return "redirect:/customers/" + id;
+    }
+
+    @DeleteMapping("customers/{id}")
+    public String deleteCustomer(@PathVariable Long id) {
+        customerService.delete(id);
+
+        return "redirect:/customers";
     }
 }

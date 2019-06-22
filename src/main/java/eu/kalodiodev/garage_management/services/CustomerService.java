@@ -16,4 +16,6 @@ public interface CustomerService {
     CustomerCommand findCommandById(Long id);
 
     void update(CustomerCommand customerCommand);
+
+    void delete(Long id);
 }

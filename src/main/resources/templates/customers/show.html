@@ -20,6 +20,11 @@
 
     <a href="/customers">Back to Customers</a>
     <a class="btn btn-warning" th:href="${'/customers/' + customer.id + '/edit'}">Edit</a>
+
+    <form th:action="${'/customers/' + customer.id}" method="POST" th:method="delete">
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+
 </section>
 </body>
 </html>

@@ -64,4 +64,11 @@ public class JpaCustomerServiceImpl implements CustomerService {
 
         customerRepository.save(customer);
     }
+
+    @Override
+    public void delete(Long id) {
+        Customer customer = findById(id);
+
+        customerRepository.delete(customer);
+    }
 }

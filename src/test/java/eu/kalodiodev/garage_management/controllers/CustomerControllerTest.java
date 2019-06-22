@@ -131,4 +131,13 @@ class CustomerControllerTest {
         verify(customerService).update(any(CustomerCommand.class));
     }
 
+    @Test
+    void deleteCustomer() throws Exception {
+        mockMvc.perform(delete("/customers/1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/customers"));
+
+        verify(customerService).delete(1L);
+    }
+
 }
