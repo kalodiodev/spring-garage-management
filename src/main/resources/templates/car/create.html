@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/app :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Garage Management - Create Car</title>
+</head>
+<body>
+<section>
+    <h1>Create Car</h1>
+    <hr>
+
+    <form action="/customers" method="post" th:object="${carCommand}">
+        <div class="form-group row">
+            <label for="numberPlate" class="col-md-2 col-form-label text-md-right">Number Plate</label>
+            <div class="col-md-8">
+                <input id="numberPlate" class="form-control" name="numberPlate" type="text" th:field="*{numberPlate}" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="manufacturer" class="col-md-2 col-form-label text-md-right">Manufacturer</label>
+            <div class="col-md-8">
+                <input id="manufacturer" class="form-control" name="manufacturer" type="text" th:field="*{manufacturer}" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="model" class="col-md-2 col-form-label text-md-right">Model</label>
+            <div class="col-md-8">
+                <input id="model" class="form-control" name="model" type="text" th:field="*{model}" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="manufacturedYear" class="col-md-2 col-form-label text-md-right">Manufactured Year</label>
+            <div class="col-md-8">
+                <input id="manufacturedYear" class="form-control" name="manufacturedYear" type="text" th:field="*{manufacturedYear}" />
+            </div>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Save</button>
+    </form>
+</section>
+</body>
+</html>
