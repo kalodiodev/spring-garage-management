@@ -25,6 +25,21 @@
         <button type="submit" class="btn btn-danger">Delete</button>
     </form>
 
+
+    <h3>Cars</h3>
+    <table class="table">
+        <thead>
+            <tr><th>Number Plate</th><th>Manufacturer</th><th>Model</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+            <tr th:each="car : ${customer.cars}">
+                <td th:text="${car.numberPlate}">AAA-1234</td>
+                <td th:text="${car.manufacturer}">Nissan</td>
+                <td th:text="${car.model}">Pathfinder</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
 </section>
 </body>
 </html>

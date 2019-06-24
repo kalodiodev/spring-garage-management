@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -38,4 +40,8 @@ public class Customer {
 
     @Column(name = "comment")
     private String comment;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+    private Set<Car> cars = new HashSet<>();
+
 }
