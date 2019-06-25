@@ -8,6 +8,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomerToCustomerCommand implements Converter<Customer, CustomerCommand> {
 
+    private final CarToCarCommand carToCarCommand;
+
+    public CustomerToCustomerCommand(CarToCarCommand carToCarCommand) {
+        this.carToCarCommand = carToCarCommand;
+    }
+
     @Override
     public CustomerCommand convert(Customer source) {
 
@@ -25,6 +31,10 @@ public class CustomerToCustomerCommand implements Converter<Customer, CustomerCo
         customerCommand.setPhone(source.getPhone());
         customerCommand.setEmail(source.getEmail());
         customerCommand.setComment(source.getComment());
+
+        if (source.getCars() != null && source.getCars().size() > 0) {
+            source.getCars().forEach(car -> customerCommand.getCars().add(carToCarCommand.convert(car)));
+        }
 
         return customerCommand;
     }

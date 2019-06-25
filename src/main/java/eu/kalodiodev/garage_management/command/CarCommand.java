@@ -12,5 +12,5 @@ public class CarCommand {
     private String model;
     private int manufacturedYear;
     private String numberPlate;
-
+    private Long customerId;
 }

@@ -9,7 +9,7 @@
     <h1>Create Car</h1>
     <hr>
 
-    <form action="/customers" method="post" th:object="${carCommand}">
+    <form th:action="${'/customers/' + carCommand.customerId + '/cars'}" method="post" th:object="${carCommand}">
         <div class="form-group row">
             <label for="numberPlate" class="col-md-2 col-form-label text-md-right">Number Plate</label>
             <div class="col-md-8">
