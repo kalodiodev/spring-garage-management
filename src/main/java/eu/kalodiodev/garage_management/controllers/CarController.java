@@ -5,6 +5,7 @@ import eu.kalodiodev.garage_management.command.CustomerCommand;
 import eu.kalodiodev.garage_management.services.CarService;
 import eu.kalodiodev.garage_management.services.CustomerService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import java.util.Map;
 public class CarController {
 
     private static final String VIEW_CAR_CREATE = "car/create";
+    private static final String VIEW_CAR_EDIT = "car/edit";
 
     private final CustomerService customerService;
     private final CarService carService;
@@ -49,5 +51,12 @@ public class CarController {
         carService.save(carCommand);
 
         return "redirect:/customers/" + customerId;
+    }
+
+    @GetMapping("/customers/{customerId}/cars/{carId}/edit")
+    public String editCar(@PathVariable Long carId, Model model) {
+        model.addAttribute("carCommand", carService.findCommandById(carId));
+
+        return VIEW_CAR_EDIT;
     }
 }

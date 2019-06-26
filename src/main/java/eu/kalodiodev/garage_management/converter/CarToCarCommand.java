@@ -2,12 +2,16 @@ package eu.kalodiodev.garage_management.converter;
 
 import eu.kalodiodev.garage_management.command.CarCommand;
 import eu.kalodiodev.garage_management.domains.Car;
+import lombok.Synchronized;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CarToCarCommand  implements Converter<Car, CarCommand> {
+public class CarToCarCommand implements Converter<Car, CarCommand> {
 
+    @Synchronized
+    @Nullable
     @Override
     public CarCommand convert(Car source) {
 

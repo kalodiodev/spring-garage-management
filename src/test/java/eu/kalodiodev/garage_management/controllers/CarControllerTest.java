@@ -1,5 +1,6 @@
 package eu.kalodiodev.garage_management.controllers;
 
+import eu.kalodiodev.garage_management.command.CarCommand;
 import eu.kalodiodev.garage_management.command.CustomerCommand;
 import eu.kalodiodev.garage_management.domains.Car;
 import eu.kalodiodev.garage_management.services.CarService;
@@ -64,9 +65,28 @@ class CarControllerTest {
 
         when(customerService.findCommandById(1L)).thenReturn(customerCommand);
 
-        mockMvc.perform(post("/customers/1/cars"))
+        mockMvc.perform(post("/customers/1/cars")
+                .param("numberPlate", "AAA-1234")
+                .param("manufacturer", "Nissan")
+                .param("model", "Pathfinder")
+                .param("manufacturedYear", "2018")
+        )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/customers/1"));
 
+    }
+
+    @Test
+    void initEditCar() throws Exception {
+        CustomerCommand customerCommand = new CustomerCommand();
+        customerCommand.setId(1L);
+
+        when(customerService.findCommandById(1L)).thenReturn(customerCommand);
+        when(carService.findCommandById(1L)).thenReturn(new CarCommand());
+
+        mockMvc.perform(get("/customers/1/cars/1/edit"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("car/edit"))
+                .andExpect(model().attributeExists("carCommand"));
     }
 }
