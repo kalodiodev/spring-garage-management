@@ -36,7 +36,12 @@
                 <td th:text="${car.numberPlate}">AAA-1234</td>
                 <td th:text="${car.manufacturer}">Nissan</td>
                 <td th:text="${car.model}">Pathfinder</td>
-                <td></td>
+                <td>
+                    <a th:href="${'/customers/' + customer.id + '/cars/' + car.id + '/edit'}"
+                       class="btn btn-warning">
+                        Edit
+                    </a>
+                </td>
             </tr>
         </tbody>
     </table>
