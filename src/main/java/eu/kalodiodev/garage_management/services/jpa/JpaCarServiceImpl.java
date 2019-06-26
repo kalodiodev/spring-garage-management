@@ -45,4 +45,11 @@ public class JpaCarServiceImpl implements CarService {
 
         return carToCarCommand.convert(findById(id));
     }
+
+    @Override
+    public void update(CarCommand carCommand) {
+        findById(carCommand.getId());
+
+        carRepository.save(carCommandToCar.convert(carCommand));
+    }
 }

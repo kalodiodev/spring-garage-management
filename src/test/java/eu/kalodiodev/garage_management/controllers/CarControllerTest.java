@@ -3,6 +3,7 @@ package eu.kalodiodev.garage_management.controllers;
 import eu.kalodiodev.garage_management.command.CarCommand;
 import eu.kalodiodev.garage_management.command.CustomerCommand;
 import eu.kalodiodev.garage_management.domains.Car;
+import eu.kalodiodev.garage_management.domains.Customer;
 import eu.kalodiodev.garage_management.services.CarService;
 import eu.kalodiodev.garage_management.services.CustomerService;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,8 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -88,5 +88,22 @@ class CarControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("car/edit"))
                 .andExpect(model().attributeExists("carCommand"));
+    }
+
+    @Test
+    void updateCar() throws Exception {
+        CustomerCommand customerCommand = new CustomerCommand();
+        customerCommand.setId(1L);
+
+        when(customerService.findCommandById(1L)).thenReturn(customerCommand);
+
+        mockMvc.perform(patch("/customers/1/cars/1")
+                .param("numberPlate", "AAA-1234")
+                .param("manufacturer", "Nissan")
+                .param("model", "Pathfinder")
+                .param("manufacturedYear", "2001")
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/customers/1"));
     }
 }

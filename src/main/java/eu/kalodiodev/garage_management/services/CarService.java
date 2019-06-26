@@ -10,4 +10,6 @@ public interface CarService extends CrudService<Car, CarCommand, Long> {
     Car findById(Long id);
 
     CarCommand findCommandById(Long id);
+
+    void update(CarCommand carCommand);
 }

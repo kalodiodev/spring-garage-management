@@ -59,4 +59,13 @@ public class CarController {
 
         return VIEW_CAR_EDIT;
     }
+
+    @PatchMapping("/customers/{customerId}/cars/{carId}")
+    public String updateCustomer(@PathVariable Long customerId, @PathVariable Long carId, CarCommand carCommand) {
+        carCommand.setId(carId);
+        carCommand.setCustomerId(customerId);
+        carService.update(carCommand);
+
+        return "redirect:/customers/" + customerId;
+    }
 }
