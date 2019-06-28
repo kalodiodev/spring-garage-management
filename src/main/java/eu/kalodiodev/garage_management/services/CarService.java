@@ -5,11 +5,6 @@ import eu.kalodiodev.garage_management.domains.Car;
 
 public interface CarService extends CrudService<Car, CarCommand, Long> {
 
-    Car save(CarCommand carCommand);
+    void delete(Long customerId, Long carId);
 
-    Car findById(Long id);
-
-    CarCommand findCommandById(Long id);
-
-    void update(CarCommand carCommand);
 }

@@ -5,6 +5,7 @@ import eu.kalodiodev.garage_management.command.CarCommand;
 import eu.kalodiodev.garage_management.converter.CarCommandToCar;
 import eu.kalodiodev.garage_management.converter.CarToCarCommand;
 import eu.kalodiodev.garage_management.domains.Car;
+import eu.kalodiodev.garage_management.domains.Customer;
 import eu.kalodiodev.garage_management.repositories.CarRepository;
 import eu.kalodiodev.garage_management.repositories.CustomerRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -98,5 +99,21 @@ class JpaCarServiceTest {
         carService.update(carCommand);
 
         verify(carRepository, times(1)).save(any(Car.class));
+    }
+
+    @Test
+    void delete_car() {
+        Car car = new Car();
+        car.setId(1L);
+
+        Customer customer = new Customer();
+        customer.setId(1L);
+        customer.getCars().add(car);
+
+        when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
+
+        carService.delete(1L, 1L);
+
+        verify(carRepository, times(1)).delete(car);
     }
 }

@@ -61,10 +61,18 @@ public class CarController {
     }
 
     @PatchMapping("/customers/{customerId}/cars/{carId}")
-    public String updateCustomer(@PathVariable Long customerId, @PathVariable Long carId, CarCommand carCommand) {
+    public String updateCar(@PathVariable Long customerId, @PathVariable Long carId, CarCommand carCommand) {
         carCommand.setId(carId);
         carCommand.setCustomerId(customerId);
         carService.update(carCommand);
+
+        return "redirect:/customers/" + customerId;
+    }
+
+    @DeleteMapping("/customers/{customerId}/cars/{carId}")
+    public String deleteCar(@PathVariable Long customerId, @PathVariable Long carId) {
+
+        carService.delete(customerId, carId);
 
         return "redirect:/customers/" + customerId;
     }

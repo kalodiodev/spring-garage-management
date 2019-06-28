@@ -9,13 +9,5 @@ public interface CustomerService extends CrudService<Customer, CustomerCommand, 
 
     List<Customer> all();
 
-    Customer save(CustomerCommand customerCommand);
-
-    Customer findById(Long id);
-
-    CustomerCommand findCommandById(Long id);
-
-    void update(CustomerCommand customerCommand);
-
     void delete(Long id);
 }

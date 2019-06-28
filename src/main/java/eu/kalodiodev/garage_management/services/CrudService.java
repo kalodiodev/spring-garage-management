@@ -8,4 +8,6 @@ public interface CrudService<T, C, ID> {
     T findById(ID id);
 
     C findCommandById(ID id);
+
+    void update(C commandObject);
 }

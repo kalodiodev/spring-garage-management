@@ -1,5 +1,6 @@
 package eu.kalodiodev.garage_management.bootstrap;
 
+import eu.kalodiodev.garage_management.converter.CarToCarCommand;
 import eu.kalodiodev.garage_management.converter.CustomerToCustomerCommand;
 import eu.kalodiodev.garage_management.domains.Car;
 import eu.kalodiodev.garage_management.domains.Customer;
@@ -14,11 +15,17 @@ public class DataLoader implements CommandLineRunner {
     private final CustomerService customerService;
     private final CarService carService;
     private final CustomerToCustomerCommand customerToCustomerCommand;
+    private final CarToCarCommand carToCarCommand;
 
-    public DataLoader(CustomerService customerService, CarService carService, CustomerToCustomerCommand customerToCustomerCommand) {
+    public DataLoader(CustomerService customerService,
+                      CarService carService,
+                      CustomerToCustomerCommand customerToCustomerCommand,
+                      CarToCarCommand carToCarCommand) {
+
         this.customerService = customerService;
         this.carService = carService;
         this.customerToCustomerCommand = customerToCustomerCommand;
+        this.carToCarCommand = carToCarCommand;
     }
 
     @Override
@@ -33,8 +40,7 @@ public class DataLoader implements CommandLineRunner {
         customer.setPhone("1122332423");
         customer.setEmail("test@example.com");
         customer.setComment("A simple comment");
-
-        customerService.save(customerToCustomerCommand.convert(customer));
+        customer = customerService.save(customerToCustomerCommand.convert(customer));
 
         Car car = new Car();
         car.setNumberPlate("AAA-1234");
@@ -42,5 +48,7 @@ public class DataLoader implements CommandLineRunner {
         car.setManufacturedYear(2018);
         car.setModel("Pathfinder");
         car.setCustomer(customer);
+
+        carService.save(carToCarCommand.convert(car));
     }
 }

@@ -41,6 +41,10 @@
                        class="btn btn-warning">
                         Edit
                     </a>
+
+                    <form th:action="${'/customers/' + customer.id + '/cars/' + car.id}" th:method="delete">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
                 </td>
             </tr>
         </tbody>

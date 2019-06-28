@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -105,5 +106,16 @@ class CarControllerTest {
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/customers/1"));
+    }
+
+    @Test
+    void deleteCar() throws Exception {
+        when(customerService.findCommandById(1L)).thenReturn(new CustomerCommand());
+
+        mockMvc.perform(delete("/customers/1/cars/1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/customers/1"));
+
+        verify(carService).delete(1L,1L);
     }
 }
