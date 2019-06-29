@@ -88,6 +88,42 @@ class JpaCarServiceTest {
     }
 
     @Test
+    void find_car_by_customer_id_and_car_id() {
+        Car car = new Car();
+        car.setId(1L);
+        car.setCustomer(new Customer());
+
+        when(carRepository.findCarByIdAndCustomerId(1L, 1L)).thenReturn(Optional.of(car));
+
+        assertEquals(car, carService.findByCustomerIdAndCarId(1L, 1L));
+    }
+
+    @Test
+    void not_found_car_by_id_and_customer_id() {
+        when(carRepository.findCarByIdAndCustomerId(1L, 1L)).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> carService.findByCustomerIdAndCarId(1L, 1L));
+    }
+
+    @Test
+    void find_car_command_by_customer_id_and_car_id() {
+        CarCommand carCommand = new CarCommand();
+        carCommand.setId(1L);
+
+        when(carRepository.findCarByIdAndCustomerId(1L, 1L)).thenReturn(Optional.of(new Car()));
+        when(carToCarCommand.convert(any(Car.class))).thenReturn(carCommand);
+
+        assertEquals(carCommand, carService.findCommandByCustomerIdAndCarId(1L, 1L));
+    }
+
+    @Test
+    void not_found_car_command_by_id_and_customer_id() {
+        when(carRepository.findCarByIdAndCustomerId(1L, 1L)).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> carService.findCommandByCustomerIdAndCarId(1L, 1L));
+    }
+
+    @Test
     void update_car() {
         CarCommand carCommand = new CarCommand();
         carCommand.setId(1L);

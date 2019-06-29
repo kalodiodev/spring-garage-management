@@ -79,11 +79,14 @@ class CarControllerTest {
 
     @Test
     void initEditCar() throws Exception {
-        CustomerCommand customerCommand = new CustomerCommand();
-        customerCommand.setId(1L);
+        CarCommand carCommand = new CarCommand();
+        carCommand.setId(1L);
+        carCommand.setCustomerId(1L);
 
-        when(customerService.findCommandById(1L)).thenReturn(customerCommand);
-        when(carService.findCommandById(1L)).thenReturn(new CarCommand());
+        when(carService.findCommandByCustomerIdAndCarId(1L, 1L)).thenReturn(carCommand);
+
+        // TODO: should be removed
+        when(customerService.findCommandById(1L)).thenReturn(new CustomerCommand());
 
         mockMvc.perform(get("/customers/1/cars/1/edit"))
                 .andExpect(status().isOk())

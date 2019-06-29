@@ -54,8 +54,8 @@ public class CarController {
     }
 
     @GetMapping("/customers/{customerId}/cars/{carId}/edit")
-    public String editCar(@PathVariable Long carId, Model model) {
-        model.addAttribute("carCommand", carService.findCommandById(carId));
+    public String editCar(@PathVariable Long customerId, @PathVariable Long carId, Model model) {
+        model.addAttribute("carCommand", carService.findCommandByCustomerIdAndCarId(customerId, carId));
 
         return VIEW_CAR_EDIT;
     }

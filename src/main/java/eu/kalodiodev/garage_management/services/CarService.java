@@ -7,4 +7,7 @@ public interface CarService extends CrudService<Car, CarCommand, Long> {
 
     void delete(Long customerId, Long carId);
 
+    Car findByCustomerIdAndCarId(Long customerId, Long carId);
+
+    CarCommand findCommandByCustomerIdAndCarId(Long customerId, Long carId);
 }
