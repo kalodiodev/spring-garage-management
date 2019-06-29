@@ -2,6 +2,7 @@ package eu.kalodiodev.garage_management.controllers;
 
 import eu.kalodiodev.garage_management.command.CarCommand;
 import eu.kalodiodev.garage_management.command.CustomerCommand;
+import eu.kalodiodev.garage_management.domains.Customer;
 import eu.kalodiodev.garage_management.services.CarService;
 import eu.kalodiodev.garage_management.services.CustomerService;
 import org.springframework.stereotype.Controller;
@@ -41,7 +42,10 @@ public class CarController {
     }
 
     @GetMapping("/customers/{customerId}/cars/create")
-    public String createCar() {
+    public String createCar(@PathVariable Long customerId, Model model) {
+        Customer customer = customerService.findById(customerId);
+        model.addAttribute("customer", customer);
+
         return VIEW_CAR_CREATE;
     }
 
