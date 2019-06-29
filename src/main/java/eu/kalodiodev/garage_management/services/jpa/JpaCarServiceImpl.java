@@ -17,17 +17,14 @@ import java.util.Optional;
 public class JpaCarServiceImpl implements CarService {
 
     private final CarRepository carRepository;
-    private final CustomerRepository customerRepository;
     private final CarCommandToCar carCommandToCar;
     private final CarToCarCommand carToCarCommand;
 
     public JpaCarServiceImpl(CarRepository carRepository,
-                             CustomerRepository customerRepository,
                              CarCommandToCar carCommandToCar,
                              CarToCarCommand carToCarCommand) {
 
         this.carRepository = carRepository;
-        this.customerRepository = customerRepository;
         this.carCommandToCar = carCommandToCar;
         this.carToCarCommand = carToCarCommand;
     }
@@ -63,23 +60,15 @@ public class JpaCarServiceImpl implements CarService {
 
     @Override
     public void delete(Long customerId, Long carId) {
-        Optional<Customer> customerOptional = customerRepository.findById(customerId);
+        Optional<Car> carOptional = carRepository.findCarByIdAndCustomerId(carId, customerId);
 
-        if (customerOptional.isPresent()) {
-            Customer customer = customerOptional.get();
+        if (carOptional.isPresent()) {
+            Car car = carOptional.get();
+            Customer customer = car.getCustomer();
+            customer.getCars().remove(car);
+            car.setCustomer(null);
 
-            Optional<Car> carOptional = customer.getCars()
-                    .stream()
-                    .filter(car -> car.getId().equals(carId))
-                    .findFirst();
-
-            if (carOptional.isPresent()) {
-                Car car = carOptional.get();
-                car.setCustomer(null);
-                customer.getCars().remove(car);
-
-                carRepository.delete(car);
-            }
+            carRepository.delete(car);
         }
     }
 

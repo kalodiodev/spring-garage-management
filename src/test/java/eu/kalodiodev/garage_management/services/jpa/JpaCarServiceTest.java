@@ -28,9 +28,6 @@ import static org.mockito.Mockito.*;
 class JpaCarServiceTest {
 
     @Mock
-    CustomerRepository customerRepository;
-
-    @Mock
     CarRepository carRepository;
 
     @Mock
@@ -145,8 +142,9 @@ class JpaCarServiceTest {
         Customer customer = new Customer();
         customer.setId(1L);
         customer.getCars().add(car);
+        car.setCustomer(customer);
 
-        when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
+        when(carRepository.findCarByIdAndCustomerId(1L, 1L)).thenReturn(Optional.of(car));
 
         carService.delete(1L, 1L);
 
