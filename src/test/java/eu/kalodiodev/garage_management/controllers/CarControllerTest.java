@@ -45,11 +45,6 @@ class CarControllerTest {
 
     @Test
     void initCreateCar() throws Exception {
-        CustomerCommand customerCommand = new CustomerCommand();
-        customerCommand.setId(1L);
-
-        when(customerService.findCommandById(1L)).thenReturn(customerCommand);
-
         mockMvc.perform(get("/customers/1/cars/create"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("car/create"))
@@ -65,9 +60,6 @@ class CarControllerTest {
         car.setId(1L);
 
         when(customerService.findById(1L)).thenReturn(customer);
-
-        // TODO: must be removed
-        when(customerService.findCommandById(1L)).thenReturn(new CustomerCommand());
 
         mockMvc.perform(post("/customers/1/cars")
                 .param("numberPlate", "AAA-1234")
@@ -88,9 +80,6 @@ class CarControllerTest {
 
         when(carService.findCommandByCustomerIdAndCarId(1L, 1L)).thenReturn(carCommand);
 
-        // TODO: should be removed
-        when(customerService.findCommandById(1L)).thenReturn(new CustomerCommand());
-
         mockMvc.perform(get("/customers/1/cars/1/edit"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("car/edit"))
@@ -99,10 +88,6 @@ class CarControllerTest {
 
     @Test
     void updateCar() throws Exception {
-        CustomerCommand customerCommand = new CustomerCommand();
-        customerCommand.setId(1L);
-
-        when(customerService.findCommandById(1L)).thenReturn(customerCommand);
 
         mockMvc.perform(patch("/customers/1/cars/1")
                 .param("numberPlate", "AAA-1234")
@@ -116,7 +101,6 @@ class CarControllerTest {
 
     @Test
     void deleteCar() throws Exception {
-        when(customerService.findCommandById(1L)).thenReturn(new CustomerCommand());
 
         mockMvc.perform(delete("/customers/1/cars/1"))
                 .andExpect(status().is3xxRedirection())

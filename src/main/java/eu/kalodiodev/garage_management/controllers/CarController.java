@@ -1,7 +1,6 @@
 package eu.kalodiodev.garage_management.controllers;
 
 import eu.kalodiodev.garage_management.command.CarCommand;
-import eu.kalodiodev.garage_management.command.CustomerCommand;
 import eu.kalodiodev.garage_management.domains.Customer;
 import eu.kalodiodev.garage_management.services.CarService;
 import eu.kalodiodev.garage_management.services.CustomerService;
@@ -9,8 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @Controller
 public class CarController {
@@ -31,20 +28,11 @@ public class CarController {
         dataBinder.setDisallowedFields("id");
     }
 
-    @ModelAttribute("carCommand")
-    public CarCommand loadCarWithCustomer(@PathVariable("customerId") Long customerId, Map<String, Object> model) {
-        CustomerCommand customerCommand = customerService.findCommandById(customerId);
-        model.put("customerCommand", customerCommand);
-        CarCommand carCommand = new CarCommand();
-        carCommand.setCustomerId(customerCommand.getId());
-
-        return carCommand;
-    }
-
     @GetMapping("/customers/{customerId}/cars/create")
     public String createCar(@PathVariable Long customerId, Model model) {
         Customer customer = customerService.findById(customerId);
         model.addAttribute("customer", customer);
+        model.addAttribute("carCommand", new CarCommand());
 
         return VIEW_CAR_CREATE;
     }
