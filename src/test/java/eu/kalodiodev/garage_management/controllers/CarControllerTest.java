@@ -58,13 +58,16 @@ class CarControllerTest {
 
     @Test
     void storeCar() throws Exception {
-        CustomerCommand customerCommand = new CustomerCommand();
-        customerCommand.setId(1L);
+        Customer customer = new Customer();
+        customer.setId(1L);
 
         Car car = new Car();
         car.setId(1L);
 
-        when(customerService.findCommandById(1L)).thenReturn(customerCommand);
+        when(customerService.findById(1L)).thenReturn(customer);
+
+        // TODO: must be removed
+        when(customerService.findCommandById(1L)).thenReturn(new CustomerCommand());
 
         mockMvc.perform(post("/customers/1/cars")
                 .param("numberPlate", "AAA-1234")

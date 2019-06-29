@@ -51,7 +51,8 @@ public class CarController {
 
     @PostMapping("/customers/{customerId}/cars")
     public String storeCar(@PathVariable Long customerId, CarCommand carCommand) {
-
+        Customer customer = customerService.findById(customerId);
+        carCommand.setCustomerId(customer.getId());
         carService.save(carCommand);
 
         return "redirect:/customers/" + customerId;
