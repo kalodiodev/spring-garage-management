@@ -6,8 +6,11 @@ import eu.kalodiodev.garage_management.services.CarService;
 import eu.kalodiodev.garage_management.services.CustomerService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 public class CarController {
@@ -31,16 +34,24 @@ public class CarController {
     @GetMapping("/customers/{customerId}/cars/create")
     public String createCar(@PathVariable Long customerId, Model model) {
         Customer customer = customerService.findById(customerId);
-        model.addAttribute("customer", customer);
-        model.addAttribute("carCommand", new CarCommand());
+        CarCommand carCommand = new CarCommand();
+        carCommand.setCustomerId(customer.getId());
+
+        model.addAttribute("carCommand", carCommand);
 
         return VIEW_CAR_CREATE;
     }
 
     @PostMapping("/customers/{customerId}/cars")
-    public String storeCar(@PathVariable Long customerId, CarCommand carCommand) {
+    public String storeCar(@PathVariable Long customerId, @Valid CarCommand carCommand, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return VIEW_CAR_CREATE;
+        }
+
         Customer customer = customerService.findById(customerId);
         carCommand.setCustomerId(customer.getId());
+
         carService.save(carCommand);
 
         return "redirect:/customers/" + customerId;

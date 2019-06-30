@@ -13,21 +13,33 @@
         <div class="form-group row">
             <label for="numberPlate" class="col-md-2 col-form-label text-md-right">Number Plate</label>
             <div class="col-md-8">
-                <input id="numberPlate" class="form-control" name="numberPlate" type="text" th:field="*{numberPlate}" />
+                <input id="numberPlate" class="form-control" name="numberPlate" type="text" th:errorclass="is-invalid" th:field="*{numberPlate}" />
+
+                <span th:if="${#fields.hasErrors('numberPlate')}" class="invalid-feedback" role="alert">
+                    <strong th:text="${#fields.errors('numberPlate')[0]}"></strong>
+                </span>
             </div>
         </div>
 
         <div class="form-group row">
             <label for="manufacturer" class="col-md-2 col-form-label text-md-right">Manufacturer</label>
             <div class="col-md-8">
-                <input id="manufacturer" class="form-control" name="manufacturer" type="text" th:field="*{manufacturer}" />
+                <input id="manufacturer" class="form-control" name="manufacturer" type="text" th:errorclass="is-invalid" th:field="*{manufacturer}" />
+
+                <span th:if="${#fields.hasErrors('manufacturer')}" class="invalid-feedback" role="alert">
+                    <strong th:text="${#fields.errors('manufacturer')[0]}"></strong>
+                </span>
             </div>
         </div>
 
         <div class="form-group row">
             <label for="model" class="col-md-2 col-form-label text-md-right">Model</label>
             <div class="col-md-8">
-                <input id="model" class="form-control" name="model" type="text" th:field="*{model}" />
+                <input id="model" class="form-control" name="model" type="text" th:errorclass="is-invalid" th:field="*{model}" />
+
+                <span th:if="${#fields.hasErrors('model')}" class="invalid-feedback" role="alert">
+                    <strong th:text="${#fields.errors('model')[0]}"></strong>
+                </span>
             </div>
         </div>
 
