@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -46,13 +47,17 @@ public class CustomerController {
     }
 
     @PostMapping("customers")
-    public String storeCustomer(@Valid CustomerCommand customerCommand, BindingResult bindingResult) {
+    public String storeCustomer(@Valid CustomerCommand customerCommand,
+                                BindingResult bindingResult,
+                                RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             return VIEW_CUSTOMER_CREATE;
         }
 
         Customer customer = customerService.save(customerCommand);
+
+        redirectAttributes.addFlashAttribute("message", "Customer Stored");
 
         return "redirect:/customers/" + customer.getId();
     }
@@ -65,7 +70,10 @@ public class CustomerController {
     }
 
     @PatchMapping("customers/{id}")
-    public String updateCustomer(@PathVariable Long id, @Valid CustomerCommand customerCommand, BindingResult bindingResult) {
+    public String updateCustomer(@PathVariable Long id,
+                                 @Valid CustomerCommand customerCommand,
+                                 BindingResult bindingResult,
+                                 RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             return VIEW_CUSTOMER_EDIT;
@@ -74,12 +82,16 @@ public class CustomerController {
         customerCommand.setId(id);
         customerService.update(customerCommand);
 
+        redirectAttributes.addFlashAttribute("message", "Customer Updated");
+
         return "redirect:/customers/" + id;
     }
 
     @DeleteMapping("customers/{id}")
-    public String deleteCustomer(@PathVariable Long id) {
+    public String deleteCustomer(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         customerService.delete(id);
+
+        redirectAttributes.addFlashAttribute("message", "Customer deleted");
 
         return "redirect:/customers";
     }

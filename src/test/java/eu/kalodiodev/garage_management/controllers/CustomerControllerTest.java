@@ -99,7 +99,8 @@ class CustomerControllerTest {
         mockMvc.perform(post("/customers").param("name", "John Doe"))
                 .andExpect(model().hasNoErrors())
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/customers/" + customer.getId()));
+                .andExpect(view().name("redirect:/customers/" + customer.getId()))
+                .andExpect(flash().attributeExists("message"));
     }
 
     @Test
@@ -141,7 +142,8 @@ class CustomerControllerTest {
                 .param("name", "Jane Doe")
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/customers/1"));
+                .andExpect(view().name("redirect:/customers/1"))
+                .andExpect(flash().attributeExists("message"));
 
         verify(customerService).update(any(CustomerCommand.class));
     }
@@ -162,7 +164,8 @@ class CustomerControllerTest {
     void deleteCustomer() throws Exception {
         mockMvc.perform(delete("/customers/1"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/customers"));
+                .andExpect(view().name("redirect:/customers"))
+                .andExpect(flash().attributeExists("message"));
 
         verify(customerService).delete(1L);
     }

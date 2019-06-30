@@ -10,6 +10,8 @@
         <nav th:replace="layout/navigation :: navbar"></nav>
 
         <div class="pt-4 container">
+            <div th:if="${message}" th:text="${message}" class="alert alert-success" role="alert"></div>
+
             <div th:replace="${content}"></div>
         </div>
     </body>
