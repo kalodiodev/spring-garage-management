@@ -1,6 +1,6 @@
 package eu.kalodiodev.garage_management.controllers;
 
-import eu.kalodiodev.garage_management.NotFoundException;
+import eu.kalodiodev.garage_management.exceptions.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

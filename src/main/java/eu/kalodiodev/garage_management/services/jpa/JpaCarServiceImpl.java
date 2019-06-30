@@ -1,13 +1,12 @@
 package eu.kalodiodev.garage_management.services.jpa;
 
-import eu.kalodiodev.garage_management.NotFoundException;
+import eu.kalodiodev.garage_management.exceptions.NotFoundException;
 import eu.kalodiodev.garage_management.command.CarCommand;
 import eu.kalodiodev.garage_management.converter.CarCommandToCar;
 import eu.kalodiodev.garage_management.converter.CarToCarCommand;
 import eu.kalodiodev.garage_management.domains.Car;
 import eu.kalodiodev.garage_management.domains.Customer;
 import eu.kalodiodev.garage_management.repositories.CarRepository;
-import eu.kalodiodev.garage_management.repositories.CustomerRepository;
 import eu.kalodiodev.garage_management.services.CarService;
 import org.springframework.stereotype.Service;
 

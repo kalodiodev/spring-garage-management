@@ -5,7 +5,10 @@ import eu.kalodiodev.garage_management.domains.Customer;
 import eu.kalodiodev.garage_management.services.CustomerService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 public class CustomerController {
@@ -43,7 +46,11 @@ public class CustomerController {
     }
 
     @PostMapping("customers")
-    public String storeCustomer(CustomerCommand customerCommand) {
+    public String storeCustomer(@Valid CustomerCommand customerCommand, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return VIEW_CUSTOMER_CREATE;
+        }
 
         Customer customer = customerService.save(customerCommand);
 

@@ -1,9 +1,10 @@
 package eu.kalodiodev.garage_management.controllers;
 
-import eu.kalodiodev.garage_management.NotFoundException;
+import eu.kalodiodev.garage_management.exceptions.NotFoundException;
 import eu.kalodiodev.garage_management.command.CustomerCommand;
 import eu.kalodiodev.garage_management.domains.Customer;
 import eu.kalodiodev.garage_management.services.CustomerService;
+import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -99,6 +100,18 @@ class CustomerControllerTest {
                 .andExpect(model().hasNoErrors())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/customers/" + customer.getId()));
+    }
+
+    @Test
+    void storeCustomerValidateName() throws Exception {
+        mockMvc.perform(post("/customers").param("name", ""))
+                .andExpect(model().attributeHasFieldErrors("customerCommand", "name"));
+
+        mockMvc.perform(post("/customers").param("name", RandomString.make(257)))
+                .andExpect(model().attributeHasFieldErrors("customerCommand", "name"));
+
+        mockMvc.perform(post("/customers").param("name", RandomString.make(2)))
+                .andExpect(model().attributeHasFieldErrors("customerCommand", "name"));
     }
 
     @Test

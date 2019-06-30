@@ -7,7 +7,11 @@
     <div class="form-group row">
         <label for="name" class="col-md-2 col-form-label text-md-right">Name</label>
         <div class="col-md-8">
-            <input id="name" class="form-control" name="name" type="text" th:field="*{name}" />
+            <input id="name" class="form-control" name="name" type="text" th:errorclass="is-invalid" th:field="*{name}" />
+
+            <span th:if="${#fields.hasErrors('name')}" class="invalid-feedback" role="alert">
+                <strong th:text="${#fields.errors('name')[0]}"></strong>
+            </span>
         </div>
     </div>
 

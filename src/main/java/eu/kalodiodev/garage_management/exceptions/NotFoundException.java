@@ -1,4 +1,4 @@
-package eu.kalodiodev.garage_management;
+package eu.kalodiodev.garage_management.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

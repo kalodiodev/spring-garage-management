@@ -1,6 +1,6 @@
 package eu.kalodiodev.garage_management.services.jpa;
 
-import eu.kalodiodev.garage_management.NotFoundException;
+import eu.kalodiodev.garage_management.exceptions.NotFoundException;
 import eu.kalodiodev.garage_management.command.CustomerCommand;
 import eu.kalodiodev.garage_management.converter.CustomerCommandToCustomer;
 import eu.kalodiodev.garage_management.converter.CustomerToCustomerCommand;
