@@ -137,11 +137,25 @@ class CustomerControllerTest {
 
     @Test
     void updateCustomer() throws Exception {
-        mockMvc.perform(patch("/customers/1"))
+        mockMvc.perform(patch("/customers/1")
+                .param("name", "Jane Doe")
+        )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/customers/1"));
 
         verify(customerService).update(any(CustomerCommand.class));
+    }
+
+    @Test
+    void updateCustomerValidateName() throws Exception {
+        mockMvc.perform(patch("/customers/1").param("name", ""))
+                .andExpect(model().attributeHasFieldErrors("customerCommand", "name"));
+
+        mockMvc.perform(patch("/customers/1").param("name", RandomString.make(257)))
+                .andExpect(model().attributeHasFieldErrors("customerCommand", "name"));
+
+        mockMvc.perform(patch("/customers/1").param("name", RandomString.make(2)))
+                .andExpect(model().attributeHasFieldErrors("customerCommand", "name"));
     }
 
     @Test

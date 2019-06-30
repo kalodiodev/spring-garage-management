@@ -65,7 +65,11 @@ public class CustomerController {
     }
 
     @PatchMapping("customers/{id}")
-    public String updateCustomer(@PathVariable Long id, CustomerCommand customerCommand) {
+    public String updateCustomer(@PathVariable Long id, @Valid CustomerCommand customerCommand, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return VIEW_CUSTOMER_EDIT;
+        }
 
         customerCommand.setId(id);
         customerService.update(customerCommand);
