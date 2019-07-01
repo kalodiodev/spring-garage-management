@@ -69,8 +69,8 @@ class CarControllerTest {
                 .param("manufacturedYear", "2018")
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/customers/1"));
-
+                .andExpect(view().name("redirect:/customers/1"))
+                .andExpect(flash().attributeExists("message"));
     }
 
     @Test
@@ -139,7 +139,10 @@ class CarControllerTest {
                 .param("manufacturedYear", "2001")
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/customers/1"));
+                .andExpect(view().name("redirect:/customers/1"))
+                .andExpect(flash().attributeExists("message"));
+
+        verify(carService).update(any(CarCommand.class));
     }
 
     @Test
@@ -147,7 +150,8 @@ class CarControllerTest {
 
         mockMvc.perform(delete("/customers/1/cars/1"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/customers/1"));
+                .andExpect(view().name("redirect:/customers/1"))
+                .andExpect(flash().attributeExists("message"));
 
         verify(carService).delete(1L,1L);
     }

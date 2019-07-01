@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -43,7 +44,10 @@ public class CarController {
     }
 
     @PostMapping("/customers/{customerId}/cars")
-    public String storeCar(@PathVariable Long customerId, @Valid CarCommand carCommand, BindingResult bindingResult) {
+    public String storeCar(@PathVariable Long customerId,
+                           @Valid CarCommand carCommand,
+                           BindingResult bindingResult,
+                           RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             return VIEW_CAR_CREATE;
@@ -53,6 +57,8 @@ public class CarController {
         carCommand.setCustomerId(customer.getId());
 
         carService.save(carCommand);
+
+        redirectAttributes.addFlashAttribute("message", "Car stored successfully!");
 
         return "redirect:/customers/" + customerId;
     }
@@ -65,18 +71,28 @@ public class CarController {
     }
 
     @PatchMapping("/customers/{customerId}/cars/{carId}")
-    public String updateCar(@PathVariable Long customerId, @PathVariable Long carId, CarCommand carCommand) {
+    public String updateCar(@PathVariable Long customerId,
+                            @PathVariable Long carId,
+                            CarCommand carCommand,
+                            RedirectAttributes redirectAttributes) {
+
         carCommand.setId(carId);
         carCommand.setCustomerId(customerId);
         carService.update(carCommand);
+
+        redirectAttributes.addFlashAttribute("message", "Car updated successfully!");
 
         return "redirect:/customers/" + customerId;
     }
 
     @DeleteMapping("/customers/{customerId}/cars/{carId}")
-    public String deleteCar(@PathVariable Long customerId, @PathVariable Long carId) {
+    public String deleteCar(@PathVariable Long customerId,
+                            @PathVariable Long carId,
+                            RedirectAttributes redirectAttributes) {
 
         carService.delete(customerId, carId);
+
+        redirectAttributes.addFlashAttribute("message", "Car deleted successfully!");
 
         return "redirect:/customers/" + customerId;
     }
