@@ -43,6 +43,19 @@ class CarControllerTest {
     }
 
     @Test
+    void displayCar() throws Exception {
+        Car car = new Car();
+        car.setId(1L);
+
+        when(carService.findByCustomerIdAndCarId(1L, 1L)).thenReturn(car);
+
+        mockMvc.perform(get("/customers/1/cars/1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("car/show"))
+                .andExpect(model().attribute("car", car));
+    }
+
+    @Test
     void initCreateCar() throws Exception {
         when(customerService.findById(1L)).thenReturn(new Customer());
 

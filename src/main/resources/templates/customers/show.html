@@ -37,6 +37,7 @@
                 <td th:text="${car.manufacturer}">Nissan</td>
                 <td th:text="${car.model}">Pathfinder</td>
                 <td>
+                    <a th:href="${'/customers/' + customer.id + '/cars/' + car.id}" class="btn btn-info">Show</a>
                     <a th:href="${'/customers/' + customer.id + '/cars/' + car.id + '/edit'}"
                        class="btn btn-warning">
                         Edit

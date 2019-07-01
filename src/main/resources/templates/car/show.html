@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/app :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Garage Management - Car</title>
+</head>
+<body>
+<section>
+    <h1>Car</h1>
+    <hr>
+    <table>
+        <tr><th>Number Plate</th><td th:text="${car.numberPlate}">ABC-1234</td></tr>
+        <tr><th>Manufacturer</th><td th:text="${car.manufacturer}">Nissan</td></tr>
+        <tr><th>Model</th><td th:text="${car.model}">Pathfinder</td></tr>
+        <tr><th>Manufactured Year</th><td th:text="${car.manufacturedYear}">2018</td></tr>
+    </table>
+
+    <a th:href="${'/customers/' + car.customer.id}">Back to Customer</a>
+</section>
+</body>
+</html>

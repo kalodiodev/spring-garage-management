@@ -18,6 +18,7 @@ public class CarController {
 
     private static final String VIEW_CAR_CREATE = "car/create";
     private static final String VIEW_CAR_EDIT = "car/edit";
+    private static final String VIEW_CAR_SHOW = "car/show";
 
     private final CustomerService customerService;
     private final CarService carService;
@@ -30,6 +31,14 @@ public class CarController {
     @InitBinder
     public void dataBinder(WebDataBinder dataBinder) {
         dataBinder.setDisallowedFields("id");
+    }
+
+    @GetMapping("/customers/{customerId}/cars/{carId}")
+    public String showCar(@PathVariable Long customerId, @PathVariable Long carId, Model model) {
+
+        model.addAttribute("car", carService.findByCustomerIdAndCarId(customerId, carId));
+
+        return VIEW_CAR_SHOW;
     }
 
     @GetMapping("/customers/{customerId}/cars/create")
