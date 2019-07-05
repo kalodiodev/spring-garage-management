@@ -6,6 +6,7 @@ import eu.kalodiodev.garage_management.domains.Car;
 import eu.kalodiodev.garage_management.domains.Customer;
 import eu.kalodiodev.garage_management.services.CarService;
 import eu.kalodiodev.garage_management.services.CustomerService;
+import eu.kalodiodev.garage_management.services.VisitService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -14,16 +15,19 @@ public class DataLoader implements CommandLineRunner {
 
     private final CustomerService customerService;
     private final CarService carService;
+    private final VisitService visitService;
     private final CustomerToCustomerCommand customerToCustomerCommand;
     private final CarToCarCommand carToCarCommand;
 
     public DataLoader(CustomerService customerService,
                       CarService carService,
+                      VisitService visitService,
                       CustomerToCustomerCommand customerToCustomerCommand,
                       CarToCarCommand carToCarCommand) {
 
         this.customerService = customerService;
         this.carService = carService;
+        this.visitService = visitService;
         this.customerToCustomerCommand = customerToCustomerCommand;
         this.carToCarCommand = carToCarCommand;
     }

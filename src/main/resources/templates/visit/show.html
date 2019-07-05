@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/app :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Garage Management - Customer</title>
+</head>
+<body>
+<section>
+    <h1>Visit</h1>
+    <hr>
+
+    <p th:text="${visit.description}">Visit description</p>
+
+</section>
+</body>
+</html>
