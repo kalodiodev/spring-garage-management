@@ -22,4 +22,8 @@ public class Visit {
     @Column(name = "description")
     private String description;
 
+    @ManyToOne
+    @JoinColumn(name = "car_id")
+    private Car car;
+
 }

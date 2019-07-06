@@ -16,6 +16,25 @@
     </table>
 
     <a th:href="${'/customers/' + car.customer.id}">Back to Customer</a>
+
+
+    <h3>Visits</h3>
+    <hr>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="visit : ${car.visits}">
+                <td th:text="${visit.date}"></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
 </section>
 </body>
 </html>

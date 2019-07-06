@@ -4,10 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
+@Table(name = "cars")
 public class Car {
 
     @Id
@@ -29,4 +32,7 @@ public class Car {
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "car")
+    private Set<Visit> visits = new HashSet<>();
 }
