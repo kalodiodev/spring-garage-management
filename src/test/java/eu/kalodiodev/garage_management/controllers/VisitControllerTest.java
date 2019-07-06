@@ -1,7 +1,9 @@
 package eu.kalodiodev.garage_management.controllers;
 
+import eu.kalodiodev.garage_management.domains.Car;
 import eu.kalodiodev.garage_management.domains.Visit;
 import eu.kalodiodev.garage_management.exceptions.NotFoundException;
+import eu.kalodiodev.garage_management.services.CarService;
 import eu.kalodiodev.garage_management.services.VisitService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +15,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -23,6 +24,9 @@ public class VisitControllerTest {
 
     @Mock
     VisitService visitService;
+
+    @Mock
+    CarService carService;
 
     @InjectMocks
     VisitController visitController;
@@ -55,6 +59,19 @@ public class VisitControllerTest {
 
         mockMvc.perform(get("/customers/1/cars/1/visits/1"))
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void initCreateVisit() throws Exception {
+        Car car = new Car();
+        car.setId(1L);
+
+        when(carService.findByCustomerIdAndCarId(1L, 1L)).thenReturn(car);
+
+        mockMvc.perform(get("/customers/1/cars/1/visits/create"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("visit/create"))
+                .andExpect(model().attributeExists("visitCommand"));
     }
 
 }

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/app :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Garage Management - Create Car</title>
+</head>
+<body>
+<section>
+    <h1>Create Car</h1>
+    <hr>
+
+    <form th:action="${'/customers/' + car.customer.id + '/cars/' + car.id + '/visits/create'}"
+          method="post"
+          th:object="${visitCommand}">
+
+        <div class="form-group row">
+            <label for="date" class="col-md-2 col-form-label text-md-right">Date</label>
+            <div class="col-md-8">
+                <input id="date" class="form-control" name="date" type="date" th:field="*{date}" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="description" class="col-md-2 col-form-label text-md-right">Description</label>
+            <div class="col-md-8">
+                <textarea id="description" class="form-control" name="description" th:value="*{description}"></textarea>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Save</button>
+
+    </form>
+</section>
+</body>
+</html>
