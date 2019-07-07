@@ -1,5 +1,7 @@
 package eu.kalodiodev.garage_management.services.jpa;
 
+import eu.kalodiodev.garage_management.command.VisitCommand;
+import eu.kalodiodev.garage_management.converter.VisitCommandToVisit;
 import eu.kalodiodev.garage_management.domains.Visit;
 import eu.kalodiodev.garage_management.exceptions.NotFoundException;
 import eu.kalodiodev.garage_management.repositories.VisitRepository;
@@ -14,6 +16,7 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -22,6 +25,9 @@ public class JpaVisitServiceTest {
 
     @Mock
     VisitRepository visitRepository;
+
+    @Mock
+    VisitCommandToVisit visitCommandToVisit;
 
     @InjectMocks
     JpaVisitServiceImpl visitService;
@@ -47,5 +53,16 @@ public class JpaVisitServiceTest {
         when(visitRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> visitService.findById(1L));
+    }
+
+    @Test
+    void save_visit_command() {
+        Visit visit = new Visit();
+        visit.setId(1L);
+
+        when(visitCommandToVisit.convert(any(VisitCommand.class))).thenReturn(new Visit());
+        when(visitRepository.save(any(Visit.class))).thenReturn(visit);
+
+        assertEquals(visit, visitService.save(new VisitCommand()));
     }
 }

@@ -30,11 +30,16 @@
         <tbody>
             <tr th:each="visit : ${car.visits}">
                 <td th:text="${visit.date}"></td>
-                <td></td>
+                <td>
+                    <a th:href="${'/customers/' + car.customer.id + '/cars/' + car.id + '/visits/' + visit.id}"
+                       class="btn btn-info">Show</a>
+                </td>
             </tr>
         </tbody>
     </table>
 
+    <a th:href="${'/customers/' + car.customer.id + '/cars/' + car.id + '/visits/create'}"
+       class="btn btn-primary">Add Visit</a>
 </section>
 </body>
 </html>
