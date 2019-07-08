@@ -1,6 +1,5 @@
 package eu.kalodiodev.garage_management.controllers;
 
-import eu.kalodiodev.garage_management.command.CarCommand;
 import eu.kalodiodev.garage_management.command.VisitCommand;
 import eu.kalodiodev.garage_management.domains.Car;
 import eu.kalodiodev.garage_management.domains.Visit;
@@ -49,7 +48,8 @@ public class VisitControllerTest {
         Visit visit = new Visit();
         visit.setId(1L);
 
-        when(visitService.findById(1L)).thenReturn(visit);
+        when(visitService.findByCustomerIdAndCarIdAndVisitId(1L, 1L, 1L))
+                .thenReturn(visit);
 
         mockMvc.perform(get("/customers/1/cars/1/visits/1"))
                 .andExpect(status().isOk())
@@ -59,7 +59,8 @@ public class VisitControllerTest {
 
     @Test
     void displayVisitNotFound() throws Exception {
-        when(visitService.findById(anyLong())).thenThrow(new NotFoundException("Visit not found"));
+        when(visitService.findByCustomerIdAndCarIdAndVisitId(anyLong(), anyLong(), anyLong()))
+                .thenThrow(new NotFoundException("Visit not found"));
 
         mockMvc.perform(get("/customers/1/cars/1/visits/1"))
                 .andExpect(status().is4xxClientError());
@@ -96,6 +97,17 @@ public class VisitControllerTest {
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/customers/1/cars/1/visits/1"));
+    }
+
+    @Test
+    void initEditVisit() throws Exception {
+
+        when(visitService.findVisitCommandByCustomerIdAndCarIdAndVisitId(1L, 1L, 1L))
+                .thenReturn(new VisitCommand());
+
+        mockMvc.perform(get("/customers/1/cars/1/visits/1/edit"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("visit/edit"));
     }
 
 }

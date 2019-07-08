@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="form (button)">
+    <div class="form-group row">
+        <label for="date" class="col-md-2 col-form-label text-md-right">Date</label>
+        <div class="col-md-8">
+            <input id="date" class="form-control" name="date" type="date" th:field="*{date}" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="description" class="col-md-2 col-form-label text-md-right">Description</label>
+        <div class="col-md-8">
+            <textarea id="description" class="form-control" name="description" th:text="*{description}"></textarea>
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit" th:text="${button}">Save</button>
+</div>
+
+</body>
+</html>

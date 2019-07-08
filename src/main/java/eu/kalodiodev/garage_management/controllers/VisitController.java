@@ -21,6 +21,7 @@ public class VisitController {
 
     private static final String VIEW_VISIT_SHOW = "visit/show";
     private static final String VIEW_VISIT_CREATE = "visit/create";
+    private static final String VIEW_VISIT_EDIT = "visit/edit";
 
     private final VisitService visitService;
     private final CarService carService;
@@ -48,13 +49,16 @@ public class VisitController {
                             @PathVariable Long visitId,
                             Model model) {
 
-        model.addAttribute("visit", visitService.findById(visitId));
+        model.addAttribute("visit", visitService.findByCustomerIdAndCarIdAndVisitId(customerId, carId, visitId));
 
         return VIEW_VISIT_SHOW;
     }
 
     @GetMapping("/customers/{customerId}/cars/{carId}/visits/create")
-    public String createVisit(@PathVariable Long customerId, @PathVariable Long carId, Model model) {
+    public String createVisit(@PathVariable Long customerId,
+                              @PathVariable Long carId,
+                              Model model) {
+
         Car car = carService.findByCustomerIdAndCarId(customerId, carId);
 
         VisitCommand visitCommand = new VisitCommand();
@@ -67,7 +71,10 @@ public class VisitController {
     }
 
     @PostMapping("/customers/{customerId}/cars/{carId}/visits")
-    public String storeVisit(@PathVariable Long customerId, @PathVariable Long carId, VisitCommand visitCommand) {
+    public String storeVisit(@PathVariable Long customerId,
+                             @PathVariable Long carId,
+                             VisitCommand visitCommand) {
+
         Car car = carService.findByCustomerIdAndCarId(customerId, carId);
 
         visitCommand.setCarId(car.getId());
@@ -75,5 +82,20 @@ public class VisitController {
         Visit visit = visitService.save(visitCommand);
 
         return "redirect:/customers/" + customerId + "/cars/" + carId + "/visits/" + visit.getId();
+    }
+
+    @GetMapping("/customers/{customerId}/cars/{carId}/visits/{visitId}/edit")
+    public String editVisit(@PathVariable Long customerId,
+                            @PathVariable Long carId,
+                            @PathVariable Long visitId,
+                            Model model) {
+
+        VisitCommand visitCommand =
+                visitService.findVisitCommandByCustomerIdAndCarIdAndVisitId(customerId, carId, visitId);
+
+        model.addAttribute("visitCommand", visitCommand);
+        model.addAttribute("customerId", customerId);
+
+        return VIEW_VISIT_EDIT;
     }
 }

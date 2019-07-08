@@ -2,6 +2,7 @@ package eu.kalodiodev.garage_management.services.jpa;
 
 import eu.kalodiodev.garage_management.command.VisitCommand;
 import eu.kalodiodev.garage_management.converter.VisitCommandToVisit;
+import eu.kalodiodev.garage_management.converter.VisitToVisitCommand;
 import eu.kalodiodev.garage_management.domains.Visit;
 import eu.kalodiodev.garage_management.exceptions.NotFoundException;
 import eu.kalodiodev.garage_management.repositories.VisitRepository;
@@ -28,6 +29,9 @@ public class JpaVisitServiceTest {
 
     @Mock
     VisitCommandToVisit visitCommandToVisit;
+
+    @Mock
+    VisitToVisitCommand visitToVisitCommand;
 
     @InjectMocks
     JpaVisitServiceImpl visitService;
@@ -64,5 +68,45 @@ public class JpaVisitServiceTest {
         when(visitRepository.save(any(Visit.class))).thenReturn(visit);
 
         assertEquals(visit, visitService.save(new VisitCommand()));
+    }
+
+    @Test
+    void find_visit_by_customer_id_and_car_id_and_visit_id() {
+        Visit visit = new Visit();
+        visit.setId(1L);
+
+        when(visitRepository.findVisitByIdAndCarIdAndCarCustomerId(1L, 1L, 1L))
+                .thenReturn(Optional.of(visit));
+
+        assertEquals(visit, visitService.findByCustomerIdAndCarIdAndVisitId(1L, 1L, 1L));
+    }
+
+    @Test
+    void find_visit_command_by_customer_id_and_car_id_and_visit_id() {
+        Visit visit = new Visit();
+        visit.setId(1L);
+
+        VisitCommand visitCommand = new VisitCommand();
+        visitCommand.setId(1L);
+
+
+        when(visitRepository.findVisitByIdAndCarIdAndCarCustomerId(1L, 1L, 1L))
+                .thenReturn(Optional.of(visit));
+
+        when(visitToVisitCommand.convert(visit)).thenReturn(visitCommand);
+
+        assertEquals(
+                visitCommand,
+                visitService.findVisitCommandByCustomerIdAndCarIdAndVisitId(1L, 1L, 1L)
+        );
+    }
+
+    @Test
+    void not_found_visit_command() {
+        when(visitRepository.findVisitByIdAndCarIdAndCarCustomerId(1L, 1L, 1L))
+                .thenThrow(new NotFoundException());
+
+        assertThrows(NotFoundException.class, () ->
+            visitService.findVisitCommandByCustomerIdAndCarIdAndVisitId(1L, 1L, 1L));
     }
 }
