@@ -17,9 +17,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -108,6 +108,19 @@ public class VisitControllerTest {
         mockMvc.perform(get("/customers/1/cars/1/visits/1/edit"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("visit/edit"));
+    }
+
+    @Test
+    void updateVisit() throws Exception {
+
+        mockMvc.perform(patch("/customers/1/cars/1/visits/1")
+                .param("date", "2019-05-06")
+                .param("description", "Our description")
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/customers/1/cars/1/visits/1"));
+
+        verify(visitService).update(any(VisitCommand.class));
     }
 
 }

@@ -8,10 +8,7 @@ import eu.kalodiodev.garage_management.services.VisitService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.beans.PropertyEditorSupport;
 import java.time.LocalDate;
@@ -50,6 +47,8 @@ public class VisitController {
                             Model model) {
 
         model.addAttribute("visit", visitService.findByCustomerIdAndCarIdAndVisitId(customerId, carId, visitId));
+        model.addAttribute("customerId", customerId);
+        model.addAttribute("carId", carId);
 
         return VIEW_VISIT_SHOW;
     }
@@ -97,5 +96,19 @@ public class VisitController {
         model.addAttribute("customerId", customerId);
 
         return VIEW_VISIT_EDIT;
+    }
+
+    @PatchMapping("/customers/{customerId}/cars/{carId}/visits/{visitId}")
+    public String updateVisit(@PathVariable Long customerId,
+                              @PathVariable Long carId,
+                              @PathVariable Long visitId,
+                              VisitCommand visitCommand) {
+
+        visitCommand.setId(visitId);
+        visitCommand.setCarId(carId);
+
+        visitService.update(visitCommand);
+
+        return "redirect:/customers/" + customerId + "/cars/" + carId + "/visits/" + visitId;
     }
 }

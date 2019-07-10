@@ -47,7 +47,9 @@ public class JpaVisitServiceImpl implements VisitService {
 
     @Override
     public void update(VisitCommand visitCommand) {
+        findById(visitCommand.getId());
 
+        visitRepository.save(visitCommandToVisit.convert(visitCommand));
     }
 
     @Override

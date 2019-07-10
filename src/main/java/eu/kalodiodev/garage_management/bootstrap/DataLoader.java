@@ -2,13 +2,17 @@ package eu.kalodiodev.garage_management.bootstrap;
 
 import eu.kalodiodev.garage_management.converter.CarToCarCommand;
 import eu.kalodiodev.garage_management.converter.CustomerToCustomerCommand;
+import eu.kalodiodev.garage_management.converter.VisitToVisitCommand;
 import eu.kalodiodev.garage_management.domains.Car;
 import eu.kalodiodev.garage_management.domains.Customer;
+import eu.kalodiodev.garage_management.domains.Visit;
 import eu.kalodiodev.garage_management.services.CarService;
 import eu.kalodiodev.garage_management.services.CustomerService;
 import eu.kalodiodev.garage_management.services.VisitService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
 
 @Component
 public class DataLoader implements CommandLineRunner {
@@ -18,18 +22,21 @@ public class DataLoader implements CommandLineRunner {
     private final VisitService visitService;
     private final CustomerToCustomerCommand customerToCustomerCommand;
     private final CarToCarCommand carToCarCommand;
+    private final VisitToVisitCommand visitToVisitCommand;
 
     public DataLoader(CustomerService customerService,
                       CarService carService,
                       VisitService visitService,
                       CustomerToCustomerCommand customerToCustomerCommand,
-                      CarToCarCommand carToCarCommand) {
+                      CarToCarCommand carToCarCommand,
+                      VisitToVisitCommand visitToVisitCommand) {
 
         this.customerService = customerService;
         this.carService = carService;
         this.visitService = visitService;
         this.customerToCustomerCommand = customerToCustomerCommand;
         this.carToCarCommand = carToCarCommand;
+        this.visitToVisitCommand = visitToVisitCommand;
     }
 
     @Override
@@ -53,6 +60,15 @@ public class DataLoader implements CommandLineRunner {
         car.setModel("Pathfinder");
         car.setCustomer(customer);
 
-        carService.save(carToCarCommand.convert(car));
+        Visit visit = new Visit();
+        visit.setDescription("My Description");
+        visit.setDate(LocalDate.of(2019, 07, 05));
+
+        car.getVisits().add(visit);
+
+        Car savedCar = carService.save(carToCarCommand.convert(car));
+
+        visit.setCar(savedCar);
+        visitService.save(visitToVisitCommand.convert(visit));
     }
 }

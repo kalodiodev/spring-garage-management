@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class JpaVisitServiceTest {
@@ -108,5 +108,19 @@ public class JpaVisitServiceTest {
 
         assertThrows(NotFoundException.class, () ->
             visitService.findVisitCommandByCustomerIdAndCarIdAndVisitId(1L, 1L, 1L));
+    }
+
+    @Test
+    void update_visit() {
+        VisitCommand visitCommand = new VisitCommand();
+        visitCommand.setId(1L);
+        visitCommand.setDescription("Test Description");
+
+        when(visitRepository.findById(1L)).thenReturn(Optional.of(new Visit()));
+        when(visitCommandToVisit.convert(any(VisitCommand.class))).thenReturn(new Visit());
+
+        visitService.update(visitCommand);
+
+        verify(visitRepository, times(1)).save(any(Visit.class));
     }
 }
