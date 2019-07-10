@@ -3,6 +3,7 @@ package eu.kalodiodev.garage_management.services.jpa;
 import eu.kalodiodev.garage_management.command.VisitCommand;
 import eu.kalodiodev.garage_management.converter.VisitCommandToVisit;
 import eu.kalodiodev.garage_management.converter.VisitToVisitCommand;
+import eu.kalodiodev.garage_management.domains.Car;
 import eu.kalodiodev.garage_management.domains.Visit;
 import eu.kalodiodev.garage_management.exceptions.NotFoundException;
 import eu.kalodiodev.garage_management.repositories.VisitRepository;
@@ -122,5 +123,27 @@ public class JpaVisitServiceTest {
         visitService.update(visitCommand);
 
         verify(visitRepository, times(1)).save(any(Visit.class));
+    }
+
+    @Test
+    void delete_visit() {
+        Visit visit = new Visit();
+        visit.setId(1L);
+        visit.setCar(new Car());
+
+        when(visitRepository.findVisitByIdAndCarIdAndCarCustomerId(1L, 1L, 1L))
+                .thenReturn(Optional.of(visit));
+
+        visitService.delete(1L, 1L, 1L);
+
+        verify(visitRepository, times(1)).delete(visit);
+    }
+
+    @Test
+    void delete_visit_not_found() {
+        when(visitRepository.findVisitByIdAndCarIdAndCarCustomerId(1L, 1L, 1L))
+                .thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> visitService.delete(1L, 1L, 1L));
     }
 }

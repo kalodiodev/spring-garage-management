@@ -111,4 +111,11 @@ public class VisitController {
 
         return "redirect:/customers/" + customerId + "/cars/" + carId + "/visits/" + visitId;
     }
+
+    @DeleteMapping("/customers/{customerId}/cars/{carId}/visits/{visitId}")
+    public String deleteVisit(@PathVariable Long customerId, @PathVariable Long carId, @PathVariable Long visitId) {
+        visitService.delete(customerId, carId, visitId);
+
+        return "redirect:/customers/" + customerId + "/cars/" + carId;
+    }
 }

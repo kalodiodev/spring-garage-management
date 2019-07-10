@@ -12,6 +12,9 @@
     <p th:text="${visit.description}">Visit description</p>
 
     <a th:href="${'/customers/' + customerId + '/cars/' + carId + '/visits/' + visit.id + '/edit'}" class="btn btn-warning">Edit</a>
+    <form th:action="${'/customers/' + customerId + '/cars/' + carId + '/visits/' + visit.id}" th:method="delete">
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
 
 </section>
 </body>

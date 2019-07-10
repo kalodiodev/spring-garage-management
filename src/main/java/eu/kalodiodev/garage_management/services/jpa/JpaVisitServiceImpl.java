@@ -53,6 +53,13 @@ public class JpaVisitServiceImpl implements VisitService {
     }
 
     @Override
+    public void delete(Long customerId, Long carId, Long visitId) {
+        Visit visit = findByCustomerIdAndCarIdAndVisitId(customerId, carId, visitId);
+
+        visitRepository.delete(visit);
+    }
+
+    @Override
     public Visit findByCustomerIdAndCarIdAndVisitId(Long customerId, Long carId, Long visitId) {
         Optional<Visit> visitOptional = visitRepository.findVisitByIdAndCarIdAndCarCustomerId(visitId, carId, customerId);
 

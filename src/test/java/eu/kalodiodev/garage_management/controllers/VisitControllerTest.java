@@ -123,4 +123,14 @@ public class VisitControllerTest {
         verify(visitService).update(any(VisitCommand.class));
     }
 
+    @Test
+    void deleteVisit() throws Exception {
+
+        mockMvc.perform(delete("/customers/1/cars/1/visits/1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/customers/1/cars/1"));
+
+        verify(visitService).delete(1L, 1L, 1L);
+    }
+
 }
