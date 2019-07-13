@@ -7,14 +7,22 @@
     <div class="form-group row">
         <label for="date" class="col-md-2 col-form-label text-md-right">Date</label>
         <div class="col-md-8">
-            <input id="date" class="form-control" name="date" type="date" th:field="*{date}" />
+            <input id="date" class="form-control" name="date" type="date" th:field="*{date}"  th:errorclass="is-invalid" />
+
+            <span th:if="${#fields.hasErrors('date')}" class="invalid-feedback" role="alert">
+                <strong th:text="${#fields.errors('date')[0]}"></strong>
+            </span>
         </div>
     </div>
 
     <div class="form-group row">
         <label for="description" class="col-md-2 col-form-label text-md-right">Description</label>
         <div class="col-md-8">
-            <textarea id="description" class="form-control" name="description" th:text="*{description}"></textarea>
+            <textarea id="description" class="form-control" name="description" th:text="*{description}" th:errorclass="is-invalid"></textarea>
+
+            <span th:if="${#fields.hasErrors('description')}" class="invalid-feedback" role="alert">
+                <strong th:text="${#fields.errors('description')[0]}"></strong>
+            </span>
         </div>
     </div>
 

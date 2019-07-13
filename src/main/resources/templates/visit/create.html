@@ -9,7 +9,7 @@
     <h1>Create Visit</h1>
     <hr>
 
-    <form th:action="${'/customers/' + car.customer.id + '/cars/' + car.id + '/visits'}"
+    <form th:action="${'/customers/' + visitCommand.customerId + '/cars/' + visitCommand.carId + '/visits'}"
           method="post"
           th:object="${visitCommand}">
 

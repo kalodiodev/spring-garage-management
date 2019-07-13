@@ -7,11 +7,11 @@ import eu.kalodiodev.garage_management.services.CarService;
 import eu.kalodiodev.garage_management.services.VisitService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import java.beans.PropertyEditorSupport;
-import java.time.LocalDate;
+import javax.validation.Valid;
 
 @Controller
 public class VisitController {
@@ -31,13 +31,6 @@ public class VisitController {
     @InitBinder
     public void dataBinder(WebDataBinder dataBinder) {
         dataBinder.setDisallowedFields("id");
-
-        dataBinder.registerCustomEditor(LocalDate.class, new PropertyEditorSupport() {
-            @Override
-            public void setAsText(String text) throws IllegalArgumentException{
-                setValue(LocalDate.parse(text));
-            }
-        });
     }
 
     @GetMapping("/customers/{customerId}/cars/{carId}/visits/{visitId}")
@@ -62,9 +55,9 @@ public class VisitController {
 
         VisitCommand visitCommand = new VisitCommand();
         visitCommand.setCarId(car.getId());
+        visitCommand.setCustomerId(customerId);
 
         model.addAttribute("visitCommand", visitCommand);
-        model.addAttribute("car", car);
 
         return VIEW_VISIT_CREATE;
     }
@@ -72,12 +65,15 @@ public class VisitController {
     @PostMapping("/customers/{customerId}/cars/{carId}/visits")
     public String storeVisit(@PathVariable Long customerId,
                              @PathVariable Long carId,
-                             VisitCommand visitCommand) {
+                             @Valid VisitCommand visitCommand,
+                             BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return VIEW_VISIT_CREATE;
+        }
 
         Car car = carService.findByCustomerIdAndCarId(customerId, carId);
-
         visitCommand.setCarId(car.getId());
-
         Visit visit = visitService.save(visitCommand);
 
         return "redirect:/customers/" + customerId + "/cars/" + carId + "/visits/" + visit.getId();

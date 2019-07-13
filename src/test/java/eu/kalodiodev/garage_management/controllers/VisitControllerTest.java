@@ -100,6 +100,21 @@ public class VisitControllerTest {
     }
 
     @Test
+    void storeVisitValidateDate() throws Exception {
+        mockMvc.perform(post("/customers/1/cars/1/visits"))
+                .andExpect(model().attributeHasFieldErrors("visitCommand", "date"));
+
+        mockMvc.perform(post("/customers/1/cars/1/visits").param("date", "string"))
+                .andExpect(model().attributeHasFieldErrors("visitCommand", "date"));
+    }
+
+    @Test
+    void storeVisitValidateDescription() throws Exception {
+        mockMvc.perform(post("/customers/1/cars/1/visits").param("description", ""))
+                .andExpect(model().attributeHasFieldErrors("visitCommand", "description"));
+    }
+
+    @Test
     void initEditVisit() throws Exception {
 
         when(visitService.findVisitCommandByCustomerIdAndCarIdAndVisitId(1L, 1L, 1L))
