@@ -16,7 +16,6 @@ public class CustomerCommandToCustomer implements Converter<CustomerCommand, Cus
 
     @Override
     public Customer convert(CustomerCommand source) {
-
         if (source == null) {
             return null;
         }
