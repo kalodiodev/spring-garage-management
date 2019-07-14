@@ -19,7 +19,10 @@ public class VisitToVisitCommand implements Converter<Visit, VisitCommand> {
         visitCommand.setId(source.getId());
         visitCommand.setDate(source.getDate());
         visitCommand.setDescription(source.getDescription());
-        visitCommand.setCarId(source.getCar().getId());
+
+        if (source.getCar() != null) {
+            visitCommand.setCarId(source.getCar().getId());
+        }
 
         return visitCommand;
     }
