@@ -2,6 +2,7 @@ package eu.kalodiodev.garage_management.converter;
 
 import eu.kalodiodev.garage_management.command.CarCommand;
 import eu.kalodiodev.garage_management.command.CustomerCommand;
+import eu.kalodiodev.garage_management.converter.values.CustomerValues;
 import eu.kalodiodev.garage_management.domains.Customer;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,15 +10,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class CustomerCommandToCustomerTest {
-
-    private static final Long ID_VALUE = 1L;
-    private static final String NAME_VALUE = "John Doe";
-    private static final String ADDRESS_VALUE = "Wall Street";
-    private static final String CITY_VALUE = "New York";
-    private static final String POSTCODE_VALUE = "10900";
-    private static final String COUNTRY_VALUE = "US";
-    private static final String EMAIL_VALUE = "john@example.com";
-    private static final String PHONE_VALUE = "21113393";
 
     private static final Long CAR_ID_VALUE = 1L;
 
@@ -42,14 +34,14 @@ public class CustomerCommandToCustomerTest {
     public void convert() throws Exception {
         // given
         CustomerCommand command = new CustomerCommand();
-        command.setId(ID_VALUE);
-        command.setName(NAME_VALUE);
-        command.setAddress(ADDRESS_VALUE);
-        command.setCity(CITY_VALUE);
-        command.setPostcode(POSTCODE_VALUE);
-        command.setCountry(COUNTRY_VALUE);
-        command.setEmail(EMAIL_VALUE);
-        command.setPhone(PHONE_VALUE);
+        command.setId(CustomerValues.ID_VALUE);
+        command.setName(CustomerValues.NAME_VALUE);
+        command.setAddress(CustomerValues.ADDRESS_VALUE);
+        command.setCity(CustomerValues.CITY_VALUE);
+        command.setPostcode(CustomerValues.POSTCODE_VALUE);
+        command.setCountry(CustomerValues.COUNTRY_VALUE);
+        command.setEmail(CustomerValues.EMAIL_VALUE);
+        command.setPhone(CustomerValues.PHONE_VALUE);
 
         CarCommand carCommand = new CarCommand();
         carCommand.setId(CAR_ID_VALUE);
@@ -61,14 +53,14 @@ public class CustomerCommandToCustomerTest {
 
         // then
         assertNotNull(customer);
-        assertEquals(ID_VALUE, customer.getId());
-        assertEquals(NAME_VALUE, customer.getName());
-        assertEquals(ADDRESS_VALUE, customer.getAddress());
-        assertEquals(CITY_VALUE, customer.getCity());
-        assertEquals(POSTCODE_VALUE, customer.getPostcode());
-        assertEquals(COUNTRY_VALUE, customer.getCountry());
-        assertEquals(EMAIL_VALUE, customer.getEmail());
-        assertEquals(PHONE_VALUE, customer.getPhone());
+        assertEquals(CustomerValues.ID_VALUE, customer.getId());
+        assertEquals(CustomerValues.NAME_VALUE, customer.getName());
+        assertEquals(CustomerValues.ADDRESS_VALUE, customer.getAddress());
+        assertEquals(CustomerValues.CITY_VALUE, customer.getCity());
+        assertEquals(CustomerValues.POSTCODE_VALUE, customer.getPostcode());
+        assertEquals(CustomerValues.COUNTRY_VALUE, customer.getCountry());
+        assertEquals(CustomerValues.EMAIL_VALUE, customer.getEmail());
+        assertEquals(CustomerValues.PHONE_VALUE, customer.getPhone());
         assertEquals(1, customer.getCars().size());
     }
 }

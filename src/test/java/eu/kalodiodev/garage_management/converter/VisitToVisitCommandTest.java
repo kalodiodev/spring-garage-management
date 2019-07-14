@@ -1,21 +1,15 @@
 package eu.kalodiodev.garage_management.converter;
 
 import eu.kalodiodev.garage_management.command.VisitCommand;
+import eu.kalodiodev.garage_management.converter.values.VisitValues;
 import eu.kalodiodev.garage_management.domains.Car;
 import eu.kalodiodev.garage_management.domains.Visit;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDate;
-
 import static org.junit.Assert.*;
 
 public class VisitToVisitCommandTest {
-
-    private static final Long ID_VALUE = 1L;
-    private static final LocalDate LOCAL_DATE_VALUE = LocalDate.parse("2019-05-14");
-    private static final String DESCRIPTION = "My Description";
-    private static final Long CAR_ID_VALUE = 1L;
 
     private VisitToVisitCommand converter;
 
@@ -38,12 +32,12 @@ public class VisitToVisitCommandTest {
     public void convert() throws Exception {
         // given
         Visit visit = new Visit();
-        visit.setId(ID_VALUE);
-        visit.setDate(LOCAL_DATE_VALUE);
-        visit.setDescription(DESCRIPTION);
+        visit.setId(VisitValues.ID_VALUE);
+        visit.setDate(VisitValues.LOCAL_DATE_VALUE);
+        visit.setDescription(VisitValues.DESCRIPTION);
 
         Car car = new Car();
-        car.setId(CAR_ID_VALUE);
+        car.setId(VisitValues.CAR_ID_VALUE);
         visit.setCar(car);
 
         // when
@@ -51,9 +45,9 @@ public class VisitToVisitCommandTest {
 
         // then
         assertNotNull(command);
-        assertEquals(ID_VALUE, command.getId());
-        assertEquals(LOCAL_DATE_VALUE, command.getDate());
-        assertEquals(DESCRIPTION, command.getDescription());
-        assertEquals(CAR_ID_VALUE, command.getCarId());
+        assertEquals(VisitValues.ID_VALUE, command.getId());
+        assertEquals(VisitValues.LOCAL_DATE_VALUE, command.getDate());
+        assertEquals(VisitValues.DESCRIPTION, command.getDescription());
+        assertEquals(VisitValues.CAR_ID_VALUE, command.getCarId());
     }
 }
