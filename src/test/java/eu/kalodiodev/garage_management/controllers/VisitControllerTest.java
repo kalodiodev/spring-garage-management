@@ -96,7 +96,8 @@ public class VisitControllerTest {
                 .param("description", "Our description")
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/customers/1/cars/1/visits/1"));
+                .andExpect(view().name("redirect:/customers/1/cars/1/visits/1"))
+                .andExpect(flash().attributeExists("message"));
     }
 
     @Test
@@ -133,7 +134,8 @@ public class VisitControllerTest {
                 .param("description", "Our description")
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/customers/1/cars/1/visits/1"));
+                .andExpect(view().name("redirect:/customers/1/cars/1/visits/1"))
+                .andExpect(flash().attributeExists("message"));
 
         verify(visitService).update(any(VisitCommand.class));
     }
@@ -143,7 +145,8 @@ public class VisitControllerTest {
 
         mockMvc.perform(delete("/customers/1/cars/1/visits/1"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/customers/1/cars/1"));
+                .andExpect(view().name("redirect:/customers/1/cars/1"))
+                .andExpect(flash().attributeExists("message"));
 
         verify(visitService).delete(1L, 1L, 1L);
     }

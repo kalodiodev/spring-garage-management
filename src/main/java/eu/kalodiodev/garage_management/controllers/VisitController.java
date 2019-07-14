@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -66,7 +67,8 @@ public class VisitController {
     public String storeVisit(@PathVariable Long customerId,
                              @PathVariable Long carId,
                              @Valid VisitCommand visitCommand,
-                             BindingResult bindingResult) {
+                             BindingResult bindingResult,
+                             RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             return VIEW_VISIT_CREATE;
@@ -75,6 +77,8 @@ public class VisitController {
         Car car = carService.findByCustomerIdAndCarId(customerId, carId);
         visitCommand.setCarId(car.getId());
         Visit visit = visitService.save(visitCommand);
+
+        redirectAttributes.addFlashAttribute("message", "Visit created");
 
         return "redirect:/customers/" + customerId + "/cars/" + carId + "/visits/" + visit.getId();
     }
@@ -98,19 +102,28 @@ public class VisitController {
     public String updateVisit(@PathVariable Long customerId,
                               @PathVariable Long carId,
                               @PathVariable Long visitId,
-                              VisitCommand visitCommand) {
+                              VisitCommand visitCommand,
+                              RedirectAttributes redirectAttributes) {
 
         visitCommand.setId(visitId);
         visitCommand.setCarId(carId);
 
         visitService.update(visitCommand);
 
+        redirectAttributes.addFlashAttribute("message", "Visit updated");
+
         return "redirect:/customers/" + customerId + "/cars/" + carId + "/visits/" + visitId;
     }
 
     @DeleteMapping("/customers/{customerId}/cars/{carId}/visits/{visitId}")
-    public String deleteVisit(@PathVariable Long customerId, @PathVariable Long carId, @PathVariable Long visitId) {
+    public String deleteVisit(@PathVariable Long customerId,
+                              @PathVariable Long carId,
+                              @PathVariable Long visitId,
+                              RedirectAttributes redirectAttributes) {
+
         visitService.delete(customerId, carId, visitId);
+
+        redirectAttributes.addFlashAttribute("message", "Visit deleted");
 
         return "redirect:/customers/" + customerId + "/cars/" + carId;
     }
