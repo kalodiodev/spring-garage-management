@@ -91,9 +91,9 @@ public class VisitController {
 
         VisitCommand visitCommand =
                 visitService.findVisitCommandByCustomerIdAndCarIdAndVisitId(customerId, carId, visitId);
+        visitCommand.setCustomerId(customerId);
 
         model.addAttribute("visitCommand", visitCommand);
-        model.addAttribute("customerId", customerId);
 
         return VIEW_VISIT_EDIT;
     }
@@ -102,11 +102,19 @@ public class VisitController {
     public String updateVisit(@PathVariable Long customerId,
                               @PathVariable Long carId,
                               @PathVariable Long visitId,
-                              VisitCommand visitCommand,
+                              @Valid VisitCommand visitCommand,
+                              BindingResult bindingResult,
                               RedirectAttributes redirectAttributes) {
+
+        visitService.findVisitCommandByCustomerIdAndCarIdAndVisitId(customerId, carId, visitId);
 
         visitCommand.setId(visitId);
         visitCommand.setCarId(carId);
+        visitCommand.setCustomerId(customerId);
+
+        if (bindingResult.hasErrors()) {
+            return VIEW_VISIT_EDIT;
+        }
 
         visitService.update(visitCommand);
 

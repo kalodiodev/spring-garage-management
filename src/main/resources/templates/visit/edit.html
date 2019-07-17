@@ -9,7 +9,7 @@
     <h1>Edit Visit</h1>
     <hr>
 
-    <form th:action="${'/customers/' + customerId + '/cars/' + visitCommand.carId + '/visits/' + visitCommand.id}"
+    <form th:action="${'/customers/' + visitCommand.customerId + '/cars/' + visitCommand.carId + '/visits/' + visitCommand.id}"
           th:method="patch"
           th:object="${visitCommand}">
 

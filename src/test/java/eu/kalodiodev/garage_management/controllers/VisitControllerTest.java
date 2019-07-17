@@ -141,6 +141,21 @@ public class VisitControllerTest {
     }
 
     @Test
+    void updateVisitValidateDate() throws Exception {
+        mockMvc.perform(patch("/customers/1/cars/1/visits/1"))
+                .andExpect(model().attributeHasFieldErrors("visitCommand", "date"));
+
+        mockMvc.perform(patch("/customers/1/cars/1/visits/1").param("date", "string"))
+                .andExpect(model().attributeHasFieldErrors("visitCommand", "date"));
+    }
+
+    @Test
+    void updateVisitValidateDescription() throws Exception {
+        mockMvc.perform(patch("/customers/1/cars/1/visits/1").param("description", ""))
+                .andExpect(model().attributeHasFieldErrors("visitCommand", "description"));
+    }
+
+    @Test
     void deleteVisit() throws Exception {
 
         mockMvc.perform(delete("/customers/1/cars/1/visits/1"))
