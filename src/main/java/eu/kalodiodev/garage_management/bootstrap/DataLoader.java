@@ -3,14 +3,8 @@ package eu.kalodiodev.garage_management.bootstrap;
 import eu.kalodiodev.garage_management.converter.CarToCarCommand;
 import eu.kalodiodev.garage_management.converter.CustomerToCustomerCommand;
 import eu.kalodiodev.garage_management.converter.VisitToVisitCommand;
-import eu.kalodiodev.garage_management.domains.Car;
-import eu.kalodiodev.garage_management.domains.Customer;
-import eu.kalodiodev.garage_management.domains.User;
-import eu.kalodiodev.garage_management.domains.Visit;
-import eu.kalodiodev.garage_management.services.CarService;
-import eu.kalodiodev.garage_management.services.CustomerService;
-import eu.kalodiodev.garage_management.services.UserService;
-import eu.kalodiodev.garage_management.services.VisitService;
+import eu.kalodiodev.garage_management.domains.*;
+import eu.kalodiodev.garage_management.services.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -24,6 +18,7 @@ public class DataLoader implements CommandLineRunner {
     private final CarService carService;
     private final VisitService visitService;
     private final UserService userService;
+    private final RoleService roleService;
     private final CustomerToCustomerCommand customerToCustomerCommand;
     private final CarToCarCommand carToCarCommand;
     private final VisitToVisitCommand visitToVisitCommand;
@@ -31,7 +26,7 @@ public class DataLoader implements CommandLineRunner {
     public DataLoader(CustomerService customerService,
                       CarService carService,
                       VisitService visitService,
-                      UserService userService, CustomerToCustomerCommand customerToCustomerCommand,
+                      UserService userService, RoleService roleService, CustomerToCustomerCommand customerToCustomerCommand,
                       CarToCarCommand carToCarCommand,
                       VisitToVisitCommand visitToVisitCommand) {
 
@@ -39,6 +34,7 @@ public class DataLoader implements CommandLineRunner {
         this.carService = carService;
         this.visitService = visitService;
         this.userService = userService;
+        this.roleService = roleService;
         this.customerToCustomerCommand = customerToCustomerCommand;
         this.carToCarCommand = carToCarCommand;
         this.visitToVisitCommand = visitToVisitCommand;
@@ -46,6 +42,10 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
+        Role role = new Role();
+        role.setName("ADMIN");
+        roleService.save(role);
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String secret = encoder.encode("password");
@@ -55,6 +55,7 @@ public class DataLoader implements CommandLineRunner {
         user.setPassword(secret);
         user.setFirstName("John");
         user.setLastName("Doe");
+        user.addRole(role);
         userService.save(user);
 
         Customer customer = new Customer();
