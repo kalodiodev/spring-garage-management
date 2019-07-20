@@ -5,11 +5,14 @@ import eu.kalodiodev.garage_management.converter.CustomerToCustomerCommand;
 import eu.kalodiodev.garage_management.converter.VisitToVisitCommand;
 import eu.kalodiodev.garage_management.domains.Car;
 import eu.kalodiodev.garage_management.domains.Customer;
+import eu.kalodiodev.garage_management.domains.User;
 import eu.kalodiodev.garage_management.domains.Visit;
 import eu.kalodiodev.garage_management.services.CarService;
 import eu.kalodiodev.garage_management.services.CustomerService;
+import eu.kalodiodev.garage_management.services.UserService;
 import eu.kalodiodev.garage_management.services.VisitService;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -20,6 +23,7 @@ public class DataLoader implements CommandLineRunner {
     private final CustomerService customerService;
     private final CarService carService;
     private final VisitService visitService;
+    private final UserService userService;
     private final CustomerToCustomerCommand customerToCustomerCommand;
     private final CarToCarCommand carToCarCommand;
     private final VisitToVisitCommand visitToVisitCommand;
@@ -27,13 +31,14 @@ public class DataLoader implements CommandLineRunner {
     public DataLoader(CustomerService customerService,
                       CarService carService,
                       VisitService visitService,
-                      CustomerToCustomerCommand customerToCustomerCommand,
+                      UserService userService, CustomerToCustomerCommand customerToCustomerCommand,
                       CarToCarCommand carToCarCommand,
                       VisitToVisitCommand visitToVisitCommand) {
 
         this.customerService = customerService;
         this.carService = carService;
         this.visitService = visitService;
+        this.userService = userService;
         this.customerToCustomerCommand = customerToCustomerCommand;
         this.carToCarCommand = carToCarCommand;
         this.visitToVisitCommand = visitToVisitCommand;
@@ -41,6 +46,16 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String secret = encoder.encode("password");
+
+        User user = new User();
+        user.setEmail("test@example.com");
+        user.setPassword(secret);
+        user.setFirstName("John");
+        user.setLastName("Doe");
+        userService.save(user);
 
         Customer customer = new Customer();
         customer.setName("John Doe");
