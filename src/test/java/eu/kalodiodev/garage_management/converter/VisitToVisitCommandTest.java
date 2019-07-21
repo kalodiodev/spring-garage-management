@@ -4,8 +4,8 @@ import eu.kalodiodev.garage_management.command.VisitCommand;
 import eu.kalodiodev.garage_management.converter.values.VisitValues;
 import eu.kalodiodev.garage_management.domains.Car;
 import eu.kalodiodev.garage_management.domains.Visit;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.*;
 
@@ -13,7 +13,7 @@ public class VisitToVisitCommandTest {
 
     private VisitToVisitCommand converter;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         converter = new VisitToVisitCommand();
     }

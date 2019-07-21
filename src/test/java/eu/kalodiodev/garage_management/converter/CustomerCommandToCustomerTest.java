@@ -4,8 +4,8 @@ import eu.kalodiodev.garage_management.command.CarCommand;
 import eu.kalodiodev.garage_management.command.CustomerCommand;
 import eu.kalodiodev.garage_management.converter.values.CustomerValues;
 import eu.kalodiodev.garage_management.domains.Customer;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.*;
 
@@ -15,7 +15,7 @@ public class CustomerCommandToCustomerTest {
 
     private CustomerCommandToCustomer converter;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         converter = new CustomerCommandToCustomer(new CarCommandToCar());
     }
