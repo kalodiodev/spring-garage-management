@@ -58,4 +58,17 @@ public class UserControllerTest {
                 .andExpect(view().name("user/index"))
                 .andExpect(model().attribute("users", hasSize(2)));
     }
+
+    @Test
+    void displayUser() throws Exception {
+        User user = new User();
+        user.setId(1L);
+
+        when(userService.findById(1L)).thenReturn(user);
+
+        mockMvc.perform(get("/users/1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("user/show"))
+                .andExpect(model().attribute("user", user));
+    }
 }

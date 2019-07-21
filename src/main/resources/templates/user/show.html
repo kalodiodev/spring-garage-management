@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/app :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Garage Management - User</title>
+</head>
+<body>
+<section>
+    <h1>User</h1>
+    <hr>
+    <table>
+        <tr><th>First Name</th><td th:text="${user.firstName}">John</td></tr>
+        <tr><th>Last Name</th><td th:text="${user.lastName}">Doe</td></tr>
+        <tr><th>Email</th><td th:text="${user.email}">test@example.com</td></tr>
+    </table>
+
+    <a href="/users">Back to Users</a>
+</section>
+</body>
+</html>
