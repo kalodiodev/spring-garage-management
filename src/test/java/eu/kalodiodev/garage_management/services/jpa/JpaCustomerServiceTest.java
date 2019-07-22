@@ -38,9 +38,15 @@ class JpaCustomerServiceTest {
     JpaCustomerServiceImpl customerService;
 
     private List<Customer> customerList = new ArrayList<>();
+    private Customer customer;
+    private final Long CUSTOMER_ID = 1L;
 
     @BeforeEach
     void setUp() {
+        customer = new Customer();
+        customer.setId(CUSTOMER_ID);
+        customer.setName("John Doe");
+
         customerList.add(new Customer());
     }
 
@@ -55,9 +61,6 @@ class JpaCustomerServiceTest {
 
     @Test
     void save_customer_command() {
-        Customer customer = new Customer();
-        customer.setId(1L);
-
         when(customerCommandToCustomer.convert(any(CustomerCommand.class))).thenReturn(new Customer());
         when(customerRepository.save(any(Customer.class))).thenReturn(customer);
 
@@ -66,11 +69,7 @@ class JpaCustomerServiceTest {
 
     @Test
     void find_customer_by_id() {
-        Customer customer = new Customer();
-        customer.setId(1L);
-        Optional<Customer> optionalCustomer = Optional.of(customer);
-
-        when(customerRepository.findById(anyLong())).thenReturn(optionalCustomer);
+        when(customerRepository.findById(anyLong())).thenReturn(Optional.of(customer));
 
         assertEquals(customer, customerService.findById(1L));
     }
@@ -84,16 +83,13 @@ class JpaCustomerServiceTest {
 
     @Test
     void find_customer_command_by_id() {
-        Customer customer = new Customer();
-        customer.setId(1L);
-
         CustomerCommand customerCommand = new CustomerCommand();
         customerCommand.setId(1L);
 
         when(customerRepository.findById(anyLong())).thenReturn(Optional.of(customer));
         when(customerToCustomerCommand.convert(any(Customer.class))).thenReturn(customerCommand);
 
-        assertEquals(customerCommand, customerService.findCommandById(1L));
+        assertEquals(customerCommand, customerService.findCommandById(CUSTOMER_ID));
     }
 
     @Test
@@ -129,21 +125,15 @@ class JpaCustomerServiceTest {
 
     @Test
     void delete_customer() {
-        Customer customer = new Customer();
-        customer.setId(1L);
+        when(customerRepository.findById(CUSTOMER_ID)).thenReturn(Optional.of(customer));
 
-        when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
-
-        customerService.delete(1L);
+        customerService.delete(CUSTOMER_ID);
 
         verify(customerRepository, times(1)).delete(customer);
     }
 
     @Test
     void not_found_customer_to_delete() {
-        Customer customer = new Customer();
-        customer.setId(1L);
-
         when(customerRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> customerService.delete(1L));
