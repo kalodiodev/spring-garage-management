@@ -38,95 +38,93 @@ class JpaCarServiceTest {
     @InjectMocks
     JpaCarServiceImpl carService;
 
+    private Car car;
+    private static final Long CAR_ID = 1L;
+    private static final Long CUSTOMER_ID = 1L;
+
 
     @BeforeEach
     void setUp() {
+        Customer customer = new Customer();
+        customer.setId(CUSTOMER_ID);
 
+        car = new Car();
+        car.setId(CAR_ID);
+        car.setCustomer(customer);
     }
 
     @Test
     void find_car_by_id() {
-        Car car = new Car();
-        car.setId(1L);
-        Optional<Car> optionalCar = Optional.of(car);
+        when(carRepository.findById(CAR_ID)).thenReturn(Optional.of(car));
 
-        when(carRepository.findById(1L)).thenReturn(optionalCar);
-
-        assertEquals(car, carService.findById(1L));
+        assertEquals(car, carService.findById(CAR_ID));
     }
 
     @Test
     void not_found_car() {
         when(carRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> carService.findById(1L));
+        assertThrows(NotFoundException.class, () -> carService.findById(CAR_ID));
     }
 
     @Test
     void find_car_command_by_id() {
-        Car car = new Car();
-        car.setId(1L);
-
         CarCommand carCommand = new CarCommand();
-        carCommand.setId(1L);
+        carCommand.setId(CAR_ID);
 
         when(carRepository.findById(anyLong())).thenReturn(Optional.of(car));
         when(carToCarCommand.convert(any(Car.class))).thenReturn(carCommand);
 
-        assertEquals(carCommand, carService.findCommandById(1L));
+        assertEquals(carCommand, carService.findCommandById(CAR_ID));
     }
 
     @Test
     void not_found_car_command() {
         when(carRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> carService.findCommandById(1L));
+        assertThrows(NotFoundException.class, () -> carService.findCommandById(CAR_ID));
     }
 
     @Test
     void find_car_by_customer_id_and_car_id() {
-        Car car = new Car();
-        car.setId(1L);
-        car.setCustomer(new Customer());
+        when(carRepository.findCarByIdAndCustomerId(CAR_ID, CUSTOMER_ID)).thenReturn(Optional.of(car));
 
-        when(carRepository.findCarByIdAndCustomerId(1L, 1L)).thenReturn(Optional.of(car));
-
-        assertEquals(car, carService.findByCustomerIdAndCarId(1L, 1L));
+        assertEquals(car, carService.findByCustomerIdAndCarId(CUSTOMER_ID, CAR_ID));
     }
 
     @Test
     void not_found_car_by_id_and_customer_id() {
-        when(carRepository.findCarByIdAndCustomerId(1L, 1L)).thenReturn(Optional.empty());
+        when(carRepository.findCarByIdAndCustomerId(CAR_ID, CUSTOMER_ID)).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> carService.findByCustomerIdAndCarId(1L, 1L));
+        assertThrows(NotFoundException.class, () -> carService.findByCustomerIdAndCarId(CUSTOMER_ID, CAR_ID));
     }
 
     @Test
     void find_car_command_by_customer_id_and_car_id() {
         CarCommand carCommand = new CarCommand();
-        carCommand.setId(1L);
+        carCommand.setId(CAR_ID);
 
-        when(carRepository.findCarByIdAndCustomerId(1L, 1L)).thenReturn(Optional.of(new Car()));
+        when(carRepository.findCarByIdAndCustomerId(CAR_ID, CUSTOMER_ID)).thenReturn(Optional.of(car));
         when(carToCarCommand.convert(any(Car.class))).thenReturn(carCommand);
 
-        assertEquals(carCommand, carService.findCommandByCustomerIdAndCarId(1L, 1L));
+        assertEquals(carCommand, carService.findCommandByCustomerIdAndCarId(CUSTOMER_ID, CAR_ID));
     }
 
     @Test
     void not_found_car_command_by_id_and_customer_id() {
-        when(carRepository.findCarByIdAndCustomerId(1L, 1L)).thenReturn(Optional.empty());
+        when(carRepository.findCarByIdAndCustomerId(CAR_ID, CUSTOMER_ID)).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> carService.findCommandByCustomerIdAndCarId(1L, 1L));
+        assertThrows(NotFoundException.class, () -> carService.findCommandByCustomerIdAndCarId(CUSTOMER_ID, CAR_ID));
     }
 
     @Test
     void update_car() {
         CarCommand carCommand = new CarCommand();
-        carCommand.setId(1L);
+        carCommand.setId(CAR_ID);
         carCommand.setNumberPlate("AAA-2345");
 
-        when(carRepository.findById(1L)).thenReturn(Optional.of(new Car()));
-        when(carCommandToCar.convert(any(CarCommand.class))).thenReturn(new Car());
+        when(carRepository.findById(CAR_ID)).thenReturn(Optional.of(car));
+        when(carCommandToCar.convert(any(CarCommand.class))).thenReturn(car);
 
         carService.update(carCommand);
 
@@ -135,17 +133,9 @@ class JpaCarServiceTest {
 
     @Test
     void delete_car() {
-        Car car = new Car();
-        car.setId(1L);
+        when(carRepository.findCarByIdAndCustomerId(CAR_ID, CUSTOMER_ID)).thenReturn(Optional.of(car));
 
-        Customer customer = new Customer();
-        customer.setId(1L);
-        customer.getCars().add(car);
-        car.setCustomer(customer);
-
-        when(carRepository.findCarByIdAndCustomerId(1L, 1L)).thenReturn(Optional.of(car));
-
-        carService.delete(1L, 1L);
+        carService.delete(CUSTOMER_ID, CAR_ID);
 
         verify(carRepository, times(1)).delete(car);
     }
