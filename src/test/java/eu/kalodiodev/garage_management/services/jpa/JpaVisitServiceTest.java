@@ -37,34 +37,36 @@ public class JpaVisitServiceTest {
     @InjectMocks
     JpaVisitServiceImpl visitService;
 
+    private static final Long VISIT_ID = 1L;
+    private static final Long CUSTOMER_ID = 1L;
+    private static final Long CAR_ID = 1L;
+
+    private Visit visit;
+
     @BeforeEach
     void setUp() {
-
+        visit = new Visit();
+        visit.setId(VISIT_ID);
     }
 
     @Test
     void find_visit_by_id() {
-        Visit visit = new Visit();
-        visit.setId(1L);
         Optional<Visit> visitOptional = Optional.of(visit);
 
-        when(visitRepository.findById(1L)).thenReturn(visitOptional);
+        when(visitRepository.findById(VISIT_ID)).thenReturn(visitOptional);
 
-        assertEquals(visit, visitService.findById(1L));
+        assertEquals(visit, visitService.findById(VISIT_ID));
     }
 
     @Test
     void not_found_visit() {
         when(visitRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> visitService.findById(1L));
+        assertThrows(NotFoundException.class, () -> visitService.findById(VISIT_ID));
     }
 
     @Test
     void save_visit_command() {
-        Visit visit = new Visit();
-        visit.setId(1L);
-
         when(visitCommandToVisit.convert(any(VisitCommand.class))).thenReturn(new Visit());
         when(visitRepository.save(any(Visit.class))).thenReturn(visit);
 
@@ -73,48 +75,41 @@ public class JpaVisitServiceTest {
 
     @Test
     void find_visit_by_customer_id_and_car_id_and_visit_id() {
-        Visit visit = new Visit();
-        visit.setId(1L);
-
-        when(visitRepository.findVisitByIdAndCarIdAndCarCustomerId(1L, 1L, 1L))
+        when(visitRepository.findVisitByIdAndCarIdAndCarCustomerId(VISIT_ID, CAR_ID, CUSTOMER_ID))
                 .thenReturn(Optional.of(visit));
 
-        assertEquals(visit, visitService.findByCustomerIdAndCarIdAndVisitId(1L, 1L, 1L));
+        assertEquals(visit, visitService.findByCustomerIdAndCarIdAndVisitId(CUSTOMER_ID, CAR_ID, VISIT_ID));
     }
 
     @Test
     void find_visit_command_by_customer_id_and_car_id_and_visit_id() {
-        Visit visit = new Visit();
-        visit.setId(1L);
-
         VisitCommand visitCommand = new VisitCommand();
-        visitCommand.setId(1L);
+        visitCommand.setId(VISIT_ID);
 
-
-        when(visitRepository.findVisitByIdAndCarIdAndCarCustomerId(1L, 1L, 1L))
+        when(visitRepository.findVisitByIdAndCarIdAndCarCustomerId(VISIT_ID, CAR_ID, CUSTOMER_ID))
                 .thenReturn(Optional.of(visit));
 
         when(visitToVisitCommand.convert(visit)).thenReturn(visitCommand);
 
         assertEquals(
                 visitCommand,
-                visitService.findVisitCommandByCustomerIdAndCarIdAndVisitId(1L, 1L, 1L)
+                visitService.findVisitCommandByCustomerIdAndCarIdAndVisitId(CUSTOMER_ID, CAR_ID, VISIT_ID)
         );
     }
 
     @Test
     void not_found_visit_command() {
-        when(visitRepository.findVisitByIdAndCarIdAndCarCustomerId(1L, 1L, 1L))
+        when(visitRepository.findVisitByIdAndCarIdAndCarCustomerId(VISIT_ID, CAR_ID, CUSTOMER_ID))
                 .thenThrow(new NotFoundException());
 
         assertThrows(NotFoundException.class, () ->
-            visitService.findVisitCommandByCustomerIdAndCarIdAndVisitId(1L, 1L, 1L));
+            visitService.findVisitCommandByCustomerIdAndCarIdAndVisitId(CUSTOMER_ID, CAR_ID, VISIT_ID));
     }
 
     @Test
     void update_visit() {
         VisitCommand visitCommand = new VisitCommand();
-        visitCommand.setId(1L);
+        visitCommand.setId(VISIT_ID);
         visitCommand.setDescription("Test Description");
 
         when(visitRepository.findById(1L)).thenReturn(Optional.of(new Visit()));
@@ -127,23 +122,19 @@ public class JpaVisitServiceTest {
 
     @Test
     void delete_visit() {
-        Visit visit = new Visit();
-        visit.setId(1L);
-        visit.setCar(new Car());
-
-        when(visitRepository.findVisitByIdAndCarIdAndCarCustomerId(1L, 1L, 1L))
+        when(visitRepository.findVisitByIdAndCarIdAndCarCustomerId(VISIT_ID, CAR_ID, CUSTOMER_ID))
                 .thenReturn(Optional.of(visit));
 
-        visitService.delete(1L, 1L, 1L);
+        visitService.delete(CUSTOMER_ID, CAR_ID, VISIT_ID);
 
         verify(visitRepository, times(1)).delete(visit);
     }
 
     @Test
     void delete_visit_not_found() {
-        when(visitRepository.findVisitByIdAndCarIdAndCarCustomerId(1L, 1L, 1L))
+        when(visitRepository.findVisitByIdAndCarIdAndCarCustomerId(VISIT_ID, CAR_ID, CUSTOMER_ID))
                 .thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> visitService.delete(1L, 1L, 1L));
+        assertThrows(NotFoundException.class, () -> visitService.delete(CUSTOMER_ID, CAR_ID, VISIT_ID));
     }
 }
