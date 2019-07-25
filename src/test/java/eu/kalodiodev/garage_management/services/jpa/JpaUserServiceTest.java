@@ -3,6 +3,7 @@ package eu.kalodiodev.garage_management.services.jpa;
 import eu.kalodiodev.garage_management.domains.User;
 import eu.kalodiodev.garage_management.exceptions.NotFoundException;
 import eu.kalodiodev.garage_management.repositories.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,14 +28,24 @@ public class JpaUserServiceTest {
     @InjectMocks
     JpaUserServiceImpl userService;
 
-    @Test
-    void find_all_users() {
-        User user1 = new User();
+    private static final Long USER_1_ID = 1L;
+    private static final Long USER_2_ID = 2L;
+
+    private User user1;
+    private User user2;
+
+
+    @BeforeEach
+    void setUp() {
+        user1 = new User();
         user1.setId(1L);
 
-        User user2 = new User();
+        user2 = new User();
         user2.setId(2L);
+    }
 
+    @Test
+    void find_all_users() {
         List<User> users = new ArrayList<>();
         users.add(user1);
         users.add(user2);
@@ -46,28 +57,22 @@ public class JpaUserServiceTest {
 
     @Test
     void save_user() {
-        User user = new User();
-        user.setId(1L);
+        when(userRepository.save(any(User.class))).thenReturn(user1);
 
-        when(userRepository.save(any(User.class))).thenReturn(user);
-
-        assertEquals(user, userService.save(user));
+        assertEquals(user1, userService.save(user1));
     }
 
     @Test
     void find_user_by_id() {
-        User user = new User();
-        user.setId(1L);
+        when(userRepository.findById(USER_1_ID)).thenReturn(Optional.of(user1));
 
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-
-        assertEquals(user, userService.findById(1L));
+        assertEquals(user1, userService.findById(USER_1_ID));
     }
 
     @Test
     void user_not_found() {
-        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+        when(userRepository.findById(USER_1_ID)).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> userService.findById(1L));
+        assertThrows(NotFoundException.class, () -> userService.findById(USER_1_ID));
     }
 }
