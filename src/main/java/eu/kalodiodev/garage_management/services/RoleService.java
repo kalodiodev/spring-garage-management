@@ -5,4 +5,6 @@ import eu.kalodiodev.garage_management.domains.Role;
 public interface RoleService {
 
     Role save(Role role);
+
+    Role findByName(String name);
 }

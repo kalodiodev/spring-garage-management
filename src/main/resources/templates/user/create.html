@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/app :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Garage Management - Create User</title>
+</head>
+<body>
+<section>
+    <h1>Create User</h1>
+    <hr>
+
+    <form action="/users" method="post" th:object="${userCommand}">
+        <div class="form-group row">
+            <label for="firstName" class="col-md-2 col-form-label text-md-right">First Name</label>
+            <div class="col-md-8">
+                <input id="firstName" type="text" class="form-control" name="firstName" th:field="*{firstName}"/>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="lastName" class="col-md-2 col-form-label text-md-right">Last Name</label>
+            <div class="col-md-8">
+                <input id="lastName" type="text" class="form-control" name="lastName" th:field="*{lastName}"/>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="email" class="col-md-2 col-form-label text-md-right">Email</label>
+            <div class="col-md-8">
+                <input id="email" type="email" class="form-control" name="email" th:field="*{email}"/>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="password" class="col-md-2 col-form-label text-md-right">Password</label>
+            <div class="col-md-8">
+                <input id="password" type="password" class="form-control" name="password" th:field="*{password}"/>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="password_confirm" class="col-md-2 col-form-label text-md-right">Password Confirm</label>
+            <div class="col-md-8">
+                <input id="password_confirm" type="password" class="form-control" name="password_confirm" th:field="*{password_confirm}"/>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Save</button>
+    </form>
+
+</section>
+</body>
+</html>

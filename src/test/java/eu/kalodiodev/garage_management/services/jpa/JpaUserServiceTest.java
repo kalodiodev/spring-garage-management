@@ -1,14 +1,19 @@
 package eu.kalodiodev.garage_management.services.jpa;
 
+import eu.kalodiodev.garage_management.command.UserCommand;
+import eu.kalodiodev.garage_management.converter.UserCommandToUser;
+import eu.kalodiodev.garage_management.domains.Role;
 import eu.kalodiodev.garage_management.domains.User;
 import eu.kalodiodev.garage_management.exceptions.NotFoundException;
 import eu.kalodiodev.garage_management.repositories.UserRepository;
+import eu.kalodiodev.garage_management.services.RoleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +22,7 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -24,6 +30,15 @@ public class JpaUserServiceTest {
 
     @Mock
     UserRepository userRepository;
+
+    @Mock
+    PasswordEncoder passwordEncoder;
+
+    @Mock
+    UserCommandToUser userCommandToUser;
+
+    @Mock
+    RoleService roleService;
 
     @InjectMocks
     JpaUserServiceImpl userService;
@@ -74,5 +89,17 @@ public class JpaUserServiceTest {
         when(userRepository.findById(USER_1_ID)).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> userService.findById(USER_1_ID));
+    }
+
+    @Test
+    void register_user_command() {
+        user1.setPassword("password");
+
+        when(userRepository.save(any(User.class))).thenReturn(user1);
+        when(userCommandToUser.convert(any(UserCommand.class))).thenReturn(user1);
+        when(passwordEncoder.encode(anyString())).thenReturn("asdffdsadf");
+        when(roleService.findByName(anyString())).thenReturn(new Role());
+
+        assertEquals(user1, userService.register(new UserCommand()));
     }
 }

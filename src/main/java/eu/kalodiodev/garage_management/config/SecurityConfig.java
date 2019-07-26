@@ -35,6 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
+                .csrf().disable()
                 .authorizeRequests()
                     .antMatchers(PUBLIC_MATCHERS).permitAll()
                     .antMatchers("/h2-console/**").permitAll()
@@ -49,7 +50,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .permitAll();
 
         // Only for development
-        http.csrf().ignoringAntMatchers("/h2-console/**");
         http.headers().frameOptions().disable();
     }
 

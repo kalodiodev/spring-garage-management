@@ -2,6 +2,7 @@ package eu.kalodiodev.garage_management.services.security;
 
 import eu.kalodiodev.garage_management.domains.User;
 import eu.kalodiodev.garage_management.repositories.UserRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Primary
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
