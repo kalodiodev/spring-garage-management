@@ -99,13 +99,82 @@ public class UserControllerTest {
         when(userService.register(any(UserCommand.class))).thenReturn(user);
 
         mockMvc.perform(post("/users/")
-                .param("name", "John Doe")
+                .param("firstName", "John")
+                .param("lastName", "Doe")
                 .param("email", "john@example.com")
                 .param("password", "password")
-                .param("password_confirm", "password")
+                .param("passwordConfirm", "password")
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/users/1"))
                 .andExpect(flash().attributeExists("message"));
+    }
+
+    @Test
+    void storeUserValidateName() throws Exception {
+        mockMvc.perform(post("/users")
+                .param("email", "test@example.com")
+                .param("firstName", "")
+                .param("lastName", "")
+        )
+                .andExpect(model().attributeHasFieldErrors("userCommand", "firstName"))
+                .andExpect(model().attributeHasFieldErrors("userCommand", "lastName"));
+    }
+
+    @Test
+    void storeUserValidateEmail() throws Exception {
+        mockMvc.perform(post("/users").param("email", ""))
+                .andExpect(model().attributeHasFieldErrors("userCommand", "email"));
+
+        when(userService.isEmailAlreadyInUse(any())).thenReturn(true);
+
+        mockMvc.perform(post("/users").param("email", "test@example.com"))
+                .andExpect(model().attributeHasFieldErrors("userCommand", "email"));
+    }
+
+    @Test
+    void storeUserValidatePassword() throws Exception {
+        User user = new User();
+        user.setId(1L);
+
+        when(userService.register(any())).thenReturn(user);
+
+        // No errors
+        mockMvc.perform(post("/users")
+                .param("firstName", "John")
+                .param("lastName", "Doe")
+                .param("email", "john@example.com")
+                .param("password", "12345678")
+                .param("passwordConfirm", "12345678")
+        )
+                .andExpect(model().hasNoErrors());
+
+
+        // Password confirm required
+        mockMvc.perform(post("/users")
+                .param("password", "12345678")
+                .param("passwordConfirm", "")
+        )
+                .andExpect(model().attributeHasFieldErrors("userCommand", "passwordConfirm"));
+
+        // Password required
+        mockMvc.perform(post("/users").param("password", ""))
+                .andExpect(model().attributeHasFieldErrors("userCommand", "password"));
+
+        // Password must be at least 8 chars long
+        mockMvc.perform(post("/users").param("password", "1234567"))
+                .andExpect(model().attributeHasFieldErrors("userCommand", "password"));
+
+        // Password Confirm must be at least 8 chars long
+        mockMvc.perform(post("/users").param("passwordConfirm", "1234567"))
+                .andExpect(model().attributeHasFieldErrors("userCommand", "passwordConfirm"));
+
+        // Password and Password confirm should match
+        mockMvc.perform(post("/users")
+                .param("password", "12345678")
+                .param("passwordConfirm", "13244343")
+        )
+                .andExpect(model().attributeHasErrors("userCommand"));
+
     }
 }

@@ -14,4 +14,6 @@ public interface UserService {
     User save(User user);
 
     User register(UserCommand command);
+
+    boolean isEmailAlreadyInUse(String email);
 }

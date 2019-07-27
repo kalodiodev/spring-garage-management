@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -101,5 +101,16 @@ public class JpaUserServiceTest {
         when(roleService.findByName(anyString())).thenReturn(new Role());
 
         assertEquals(user1, userService.register(new UserCommand()));
+    }
+
+    @Test
+    void is_email_already_in_use() {
+        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(new User()));
+
+        assertTrue(userService.isEmailAlreadyInUse("test@example.com"));
+
+        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.empty());
+
+        assertFalse(userService.isEmailAlreadyInUse("test@example.com"));
     }
 }

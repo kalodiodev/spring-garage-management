@@ -41,7 +41,7 @@ class UserCommandToUserTest {
         command.setLastName(LAST_NAME_VALUE);
         command.setEmail(EMAIL_VALUE);
         command.setPassword(PASSWORD_VALUE);
-        command.setPassword_confirm(PASSWORD_VALUE);
+        command.setPasswordConfirm(PASSWORD_VALUE);
 
         // when
         User user = converter.convert(command);

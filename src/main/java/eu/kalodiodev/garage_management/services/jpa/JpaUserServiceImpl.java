@@ -64,4 +64,12 @@ public class JpaUserServiceImpl implements UserService {
 
         return save(user);
     }
+
+    @Override
+    public boolean isEmailAlreadyInUse(String email) {
+
+        Optional<User> userOptional = userRepository.findByEmail(email);
+
+        return userOptional.isPresent();
+    }
 }
