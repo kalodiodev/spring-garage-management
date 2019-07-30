@@ -15,6 +15,9 @@
     </table>
 
     <a href="/users">Back to Users</a>
+    <form th:action="${'/users/' + user.id}" th:method="delete">
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
 </section>
 </body>
 </html>

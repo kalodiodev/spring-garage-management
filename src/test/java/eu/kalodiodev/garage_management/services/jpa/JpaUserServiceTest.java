@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class JpaUserServiceTest {
@@ -112,5 +112,21 @@ public class JpaUserServiceTest {
         when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.empty());
 
         assertFalse(userService.isEmailAlreadyInUse("test@example.com"));
+    }
+
+    @Test
+    void delete_user() {
+        when(userRepository.findById(USER_1_ID)).thenReturn(Optional.of(user1));
+
+        userService.delete(USER_1_ID);
+
+        verify(userRepository, times(1)).delete(user1);
+    }
+
+    @Test
+    void delete_user_not_found() {
+        when(userRepository.findById(USER_1_ID)).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> userService.delete(USER_1_ID));
     }
 }

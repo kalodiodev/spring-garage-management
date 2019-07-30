@@ -16,4 +16,6 @@ public interface UserService {
     User register(UserCommand command);
 
     boolean isEmailAlreadyInUse(String email);
+
+    void delete(Long id);
 }

@@ -72,4 +72,11 @@ public class JpaUserServiceImpl implements UserService {
 
         return userOptional.isPresent();
     }
+
+    @Override
+    public void delete(Long id) {
+        User user = findById(id);
+
+        userRepository.delete(user);
+    }
 }

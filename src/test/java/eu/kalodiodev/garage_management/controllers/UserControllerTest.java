@@ -18,9 +18,9 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -176,5 +176,15 @@ public class UserControllerTest {
         )
                 .andExpect(model().attributeHasErrors("userCommand"));
 
+    }
+
+    @Test
+    void deleteUser() throws Exception {
+        mockMvc.perform(delete("/users/1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/users"))
+                .andExpect(flash().attributeExists("message"));
+
+        verify(userService).delete(1L);
     }
 }
