@@ -1,6 +1,7 @@
 package eu.kalodiodev.garage_management.services.jpa;
 
 import eu.kalodiodev.garage_management.command.UserCommand;
+import eu.kalodiodev.garage_management.command.UserInfoCommand;
 import eu.kalodiodev.garage_management.converter.UserCommandToUser;
 import eu.kalodiodev.garage_management.domains.User;
 import eu.kalodiodev.garage_management.exceptions.NotFoundException;
@@ -78,5 +79,14 @@ public class JpaUserServiceImpl implements UserService {
         User user = findById(id);
 
         userRepository.delete(user);
+    }
+
+    @Override
+    public User updateUserInfo(User user, UserInfoCommand userInfoCommand) {
+        user.setEmail(userInfoCommand.getEmail());
+        user.setFirstName(userInfoCommand.getFirstName());
+        user.setLastName(userInfoCommand.getLastName());
+
+        return save(user);
     }
 }

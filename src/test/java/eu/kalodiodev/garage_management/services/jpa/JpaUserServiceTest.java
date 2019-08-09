@@ -1,6 +1,7 @@
 package eu.kalodiodev.garage_management.services.jpa;
 
 import eu.kalodiodev.garage_management.command.UserCommand;
+import eu.kalodiodev.garage_management.command.UserInfoCommand;
 import eu.kalodiodev.garage_management.converter.UserCommandToUser;
 import eu.kalodiodev.garage_management.domains.Role;
 import eu.kalodiodev.garage_management.domains.User;
@@ -128,5 +129,17 @@ public class JpaUserServiceTest {
         when(userRepository.findById(USER_1_ID)).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> userService.delete(USER_1_ID));
+    }
+
+    @Test
+    void update_given_user_info() {
+        UserInfoCommand userInfoCommand = new UserInfoCommand();
+        userInfoCommand.setId(1L);
+        userInfoCommand.setFirstName("John");
+        userInfoCommand.setLastName("Doe");
+
+        when(userRepository.save(any(User.class))).thenReturn(user1);
+
+        assertEquals(user1, userService.updateUserInfo(user1, userInfoCommand));
     }
 }
