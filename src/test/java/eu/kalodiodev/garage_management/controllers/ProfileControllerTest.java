@@ -90,10 +90,49 @@ public class ProfileControllerTest {
     void update_user_password() throws Exception {
         mockMvc.perform(patch("/profile/password")
                 .param("password", "my_new_password")
-                .param("passswordConfirm", "my_new_password")
+                .param("passwordConfirm", "my_new_password")
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/profile"))
                 .andExpect(flash().attributeExists("message"));
+    }
+
+    @Test
+    void update_user_validate_password() throws Exception {
+
+        // No errors
+        mockMvc.perform(patch("/profile/password")
+                .param("password", "12345678")
+                .param("passwordConfirm", "12345678")
+        )
+                .andExpect(model().hasNoErrors());
+
+
+        // Password confirm required
+        mockMvc.perform(patch("/profile/password")
+                .param("password", "12345678")
+                .param("passwordConfirm", "")
+        )
+                .andExpect(model().attributeHasFieldErrors("passwordCommand", "passwordConfirm"));
+
+        // Password required
+        mockMvc.perform(patch("/profile/password").param("password", ""))
+                .andExpect(model().attributeHasFieldErrors("passwordCommand", "password"));
+
+        // Password must be at least 8 chars long
+        mockMvc.perform(patch("/profile/password").param("password", "1234567"))
+                .andExpect(model().attributeHasFieldErrors("passwordCommand", "password"));
+
+        // Password Confirm must be at least 8 chars long
+        mockMvc.perform(patch("/profile/password").param("passwordConfirm", "1234567"))
+                .andExpect(model().attributeHasFieldErrors("passwordCommand", "passwordConfirm"));
+
+        // Password and Password confirm should match
+        mockMvc.perform(patch("/profile/password")
+                .param("password", "12345678")
+                .param("passwordConfirm", "13244343")
+        )
+                .andExpect(model().attributeHasErrors("passwordCommand"));
+
     }
 }

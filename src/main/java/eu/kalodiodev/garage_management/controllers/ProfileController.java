@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -46,6 +47,7 @@ public class ProfileController {
     public String updateProfile(@AuthenticationPrincipal User user,
                                 @Valid UserInfoCommand userInfoCommand,
                                 BindingResult bindingResult,
+                                @ModelAttribute("passwordCommand")PasswordCommand passwordCommand,
                                 RedirectAttributes redirectAttributes) {
 
         if (userService.isEmailAlreadyInUseExceptUser(userInfoCommand.getEmail(), user)) {
@@ -65,7 +67,20 @@ public class ProfileController {
     }
 
     @PatchMapping("/profile/password")
-    public String updatePassword(@AuthenticationPrincipal User user, PasswordCommand passwordCommand, RedirectAttributes redirectAttributes) {
+    public String updatePassword(@AuthenticationPrincipal User user,
+                                 @Valid PasswordCommand passwordCommand,
+                                 BindingResult bindingResult,
+                                 @ModelAttribute("userInfoCommand")UserInfoCommand userInfoCommand,
+                                 RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            userInfoCommand.setId(user.getId());
+            userInfoCommand.setEmail(user.getEmail());
+            userInfoCommand.setFirstName(user.getFirstName());
+            userInfoCommand.setLastName(user.getLastName());
+
+            return EDIT_PROFILE_VIEW;
+        }
 
         userService.updatePassword(user, passwordCommand);
 
