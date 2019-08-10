@@ -1,5 +1,6 @@
 package eu.kalodiodev.garage_management.services.jpa;
 
+import eu.kalodiodev.garage_management.command.PasswordCommand;
 import eu.kalodiodev.garage_management.command.UserCommand;
 import eu.kalodiodev.garage_management.command.UserInfoCommand;
 import eu.kalodiodev.garage_management.converter.UserCommandToUser;
@@ -96,6 +97,14 @@ public class JpaUserServiceImpl implements UserService {
         user.setEmail(userInfoCommand.getEmail());
         user.setFirstName(userInfoCommand.getFirstName());
         user.setLastName(userInfoCommand.getLastName());
+
+        return save(user);
+    }
+
+    @Override
+    public User updatePassword(User user, PasswordCommand passwordCommand) {
+        String password = passwordEncoder.encode(passwordCommand.getPassword());
+        user.setPassword(password);
 
         return save(user);
     }

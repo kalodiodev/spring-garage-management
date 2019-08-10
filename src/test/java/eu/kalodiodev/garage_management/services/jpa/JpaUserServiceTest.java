@@ -1,5 +1,6 @@
 package eu.kalodiodev.garage_management.services.jpa;
 
+import eu.kalodiodev.garage_management.command.PasswordCommand;
 import eu.kalodiodev.garage_management.command.UserCommand;
 import eu.kalodiodev.garage_management.command.UserInfoCommand;
 import eu.kalodiodev.garage_management.converter.UserCommandToUser;
@@ -160,5 +161,21 @@ public class JpaUserServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(user1);
 
         assertEquals(user1, userService.updateUserInfo(user1, userInfoCommand));
+    }
+
+    @Test
+    void update_user_password() {
+        String password = "test";
+        String encodedPassword = "sddsfsdfsdfdsfs";
+
+        PasswordCommand passwordCommand = new PasswordCommand();
+        passwordCommand.setPassword(password);
+        passwordCommand.setPasswordConfirm(password);
+
+        when(userRepository.save(any(User.class))).thenReturn(user1);
+        when(passwordEncoder.encode(anyString())).thenReturn(encodedPassword);
+
+        assertEquals(user1, userService.updatePassword(user1, passwordCommand));
+        assertEquals(encodedPassword, user1.getPassword());
     }
 }

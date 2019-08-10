@@ -41,7 +41,8 @@ public class ProfileControllerTest {
         mockMvc.perform(get("/profile"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("profile/edit"))
-                .andExpect(model().attributeExists("userInfoCommand"));
+                .andExpect(model().attributeExists("userInfoCommand"))
+                .andExpect(model().attributeExists("passwordCommand"));
     }
 
     @Test
@@ -83,5 +84,16 @@ public class ProfileControllerTest {
         when(userService.isEmailAlreadyInUseExceptUser(anyString(), any(User.class))).thenReturn(true);
         mockMvc.perform(patch("/profile").param("email", "test2@example.com"))
                 .andExpect(model().attributeHasFieldErrors("userInfoCommand", "email"));
+    }
+
+    @Test
+    void update_user_password() throws Exception {
+        mockMvc.perform(patch("/profile/password")
+                .param("password", "my_new_password")
+                .param("passswordConfirm", "my_new_password")
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/profile"))
+                .andExpect(flash().attributeExists("message"));
     }
 }

@@ -1,5 +1,6 @@
 package eu.kalodiodev.garage_management.controllers;
 
+import eu.kalodiodev.garage_management.command.PasswordCommand;
 import eu.kalodiodev.garage_management.command.UserInfoCommand;
 import eu.kalodiodev.garage_management.domains.User;
 import eu.kalodiodev.garage_management.services.UserService;
@@ -36,6 +37,7 @@ public class ProfileController {
 
 
         model.addAttribute("userInfoCommand", userInfoCommand);
+        model.addAttribute("passwordCommand", new PasswordCommand());
 
         return EDIT_PROFILE_VIEW;
     }
@@ -58,6 +60,16 @@ public class ProfileController {
         userService.updateUserInfo(user, userInfoCommand);
 
         redirectAttributes.addFlashAttribute("message", "Profile updated");
+
+        return "redirect:/profile";
+    }
+
+    @PatchMapping("/profile/password")
+    public String updatePassword(@AuthenticationPrincipal User user, PasswordCommand passwordCommand, RedirectAttributes redirectAttributes) {
+
+        userService.updatePassword(user, passwordCommand);
+
+        redirectAttributes.addFlashAttribute("message", "Password updated");
 
         return "redirect:/profile";
     }

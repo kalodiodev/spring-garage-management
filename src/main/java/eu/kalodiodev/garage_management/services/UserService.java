@@ -1,5 +1,6 @@
 package eu.kalodiodev.garage_management.services;
 
+import eu.kalodiodev.garage_management.command.PasswordCommand;
 import eu.kalodiodev.garage_management.command.UserCommand;
 import eu.kalodiodev.garage_management.command.UserInfoCommand;
 import eu.kalodiodev.garage_management.domains.User;
@@ -23,4 +24,6 @@ public interface UserService {
     void delete(Long id);
 
     User updateUserInfo(User user, UserInfoCommand userInfoCommand);
+
+    User updatePassword(User user, PasswordCommand passwordCommand);
 }
