@@ -13,8 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -57,5 +56,32 @@ public class ProfileControllerTest {
                 .andExpect(flash().attributeExists("message"));
 
         verify(userService, times(1)).updateUserInfo(any(User.class), any(UserInfoCommand.class));
+    }
+
+    @Test
+    void update_profile_validate_name() throws Exception {
+        mockMvc.perform(patch("/profile")
+                .param("email", "test@example.com")
+                .param("firstName", "")
+                .param("lastName", "")
+        )
+                .andExpect(model().attributeHasFieldErrors("userInfoCommand", "firstName"))
+                .andExpect(model().attributeHasFieldErrors("userInfoCommand", "lastName"));
+    }
+
+    @Test
+    void update_profile_validate_email() throws Exception {
+        // Empty Email
+        mockMvc.perform(patch("/profile").param("email", ""))
+                .andExpect(model().attributeHasFieldErrors("userInfoCommand", "email"));
+
+        // Not valid email format
+        mockMvc.perform(patch("/profile").param("email", "notemail"))
+                .andExpect(model().attributeHasFieldErrors("userInfoCommand", "email"));
+
+        // Email already in use by other user
+        when(userService.isEmailAlreadyInUseExceptUser(anyString(), any(User.class))).thenReturn(true);
+        mockMvc.perform(patch("/profile").param("email", "test2@example.com"))
+                .andExpect(model().attributeHasFieldErrors("userInfoCommand", "email"));
     }
 }

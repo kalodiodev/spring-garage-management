@@ -18,6 +18,8 @@ public interface UserService {
 
     boolean isEmailAlreadyInUse(String email);
 
+    boolean isEmailAlreadyInUseExceptUser(String email, User user);
+
     void delete(Long id);
 
     User updateUserInfo(User user, UserInfoCommand userInfoCommand);

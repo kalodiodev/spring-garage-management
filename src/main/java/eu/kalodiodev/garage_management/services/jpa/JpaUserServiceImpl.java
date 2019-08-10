@@ -75,6 +75,15 @@ public class JpaUserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean isEmailAlreadyInUseExceptUser(String email, User user) {
+        if (email.equals(user.getEmail())) {
+            return false;
+        }
+
+        return isEmailAlreadyInUse(email);
+    }
+
+    @Override
     public void delete(Long id) {
         User user = findById(id);
 
@@ -83,6 +92,7 @@ public class JpaUserServiceImpl implements UserService {
 
     @Override
     public User updateUserInfo(User user, UserInfoCommand userInfoCommand) {
+
         user.setEmail(userInfoCommand.getEmail());
         user.setFirstName(userInfoCommand.getFirstName());
         user.setLastName(userInfoCommand.getLastName());

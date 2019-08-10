@@ -55,9 +55,11 @@ public class JpaUserServiceTest {
     void setUp() {
         user1 = new User();
         user1.setId(1L);
+        user1.setEmail("test1@example.com");
 
         user2 = new User();
         user2.setId(2L);
+        user2.setEmail("test2@example.com");
     }
 
     @Test
@@ -116,6 +118,22 @@ public class JpaUserServiceTest {
     }
 
     @Test
+    void is_email_already_in_use_except_given_user() {
+        String email = "other@example.com";
+
+        assertFalse(userService.isEmailAlreadyInUseExceptUser(user1.getEmail(), user1));
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(new User()));
+
+        assertTrue(userService.isEmailAlreadyInUseExceptUser(email, user1));
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+
+        assertFalse(userService.isEmailAlreadyInUseExceptUser(email, user1));
+    }
+
+
+    @Test
     void delete_user() {
         when(userRepository.findById(USER_1_ID)).thenReturn(Optional.of(user1));
 
@@ -135,6 +153,7 @@ public class JpaUserServiceTest {
     void update_given_user_info() {
         UserInfoCommand userInfoCommand = new UserInfoCommand();
         userInfoCommand.setId(1L);
+        userInfoCommand.setEmail("test2@example");
         userInfoCommand.setFirstName("John");
         userInfoCommand.setLastName("Doe");
 
