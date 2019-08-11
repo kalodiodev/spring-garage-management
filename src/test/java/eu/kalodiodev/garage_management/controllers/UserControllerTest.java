@@ -1,8 +1,8 @@
 package eu.kalodiodev.garage_management.controllers;
 
+import eu.kalodiodev.garage_management.command.PasswordCommand;
 import eu.kalodiodev.garage_management.command.UserCommand;
 import eu.kalodiodev.garage_management.command.UserInfoCommand;
-import eu.kalodiodev.garage_management.converter.UserToUserInfoCommand;
 import eu.kalodiodev.garage_management.domains.User;
 import eu.kalodiodev.garage_management.exceptions.NotFoundException;
 import eu.kalodiodev.garage_management.services.UserService;
@@ -27,9 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 public class UserControllerTest {
-
-    @Mock
-    private UserToUserInfoCommand userToUserInfoCommand;
 
     @Mock
     private UserService userService;
@@ -225,5 +222,25 @@ public class UserControllerTest {
                 .andExpect(flash().attributeExists("message"));
 
         verify(userService, times(1)).updateUserInfo(any(User.class), any(UserInfoCommand.class));
+    }
+
+    @Test
+    void updateUserPassword() throws Exception {
+        User user = new User();
+        user.setId(1L);
+
+        String password = "my_new_password";
+
+        when(userService.findById(1L)).thenReturn(user);
+
+        mockMvc.perform(patch("/users/1/password")
+                .param("password", password)
+                .param("passwordConfirm", password)
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/users/1"))
+                .andExpect(flash().attributeExists("message"));
+
+        verify(userService, times(1)).updatePassword(any(User.class), any(PasswordCommand.class));
     }
 }

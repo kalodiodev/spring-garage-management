@@ -98,4 +98,15 @@ public class UserController {
 
         return "redirect:/users/" + user.getId();
     }
+
+    @PatchMapping("/users/{id}/password")
+    public String updateUserPassword(@PathVariable Long id, PasswordCommand passwordCommand, RedirectAttributes redirectAttributes) {
+        User user = userService.findById(id);
+
+        userService.updatePassword(user, passwordCommand);
+
+        redirectAttributes.addFlashAttribute("message", "Password updated");
+
+        return "redirect:/users/" + user.getId();
+    }
 }
