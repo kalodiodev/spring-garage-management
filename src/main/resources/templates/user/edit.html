@@ -2,17 +2,17 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/app :: layout(~{::title}, ~{::section})}">
 <head>
-    <title>Garage Management - Profile</title>
+    <title>Garage Management - Edit User</title>
 </head>
 <body>
 <section>
-    <h1>Profile</h1>
+    <h1>Edit User</h1>
     <hr>
 
     <div>
         <h2>User Info</h2>
 
-        <form th:action="${'/profile/'}" method="post" th:object="${userInfoCommand}" th:method="patch">
+        <form th:action="${'/users/' + userInfoCommand.id}" method="post" th:object="${userInfoCommand}" th:method="patch">
             <div th:include="profile/infoFormFields :: infoFields"></div>
 
             <button class="btn btn-primary" type="submit">Update</button>
@@ -22,7 +22,7 @@
     <div class="mt-5">
         <h2>Update Password</h2>
 
-        <form th:action="${'/profile/password'}" method="post" th:object="${passwordCommand}" th:method="patch">
+        <form th:action="${'/users/' + userInfoCommand.id + '/password'}" method="post" th:object="${passwordCommand}" th:method="patch">
             <div th:include="profile/passwordFormFields :: passwordFields"></div>
 
             <button class="btn btn-primary" type="submit">Update</button>

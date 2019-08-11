@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="infoFields">
+    <div class="form-group row">
+        <label for="firstName" class="col-md-2 col-form-label text-md-right">First Name</label>
+        <div class="col-md-8">
+            <input id="firstName" type="text" class="form-control" name="firstName" th:errorclass="is-invalid" th:field="*{firstName}"/>
+
+            <span th:if="${#fields.hasErrors('firstName')}" class="invalid-feedback" role="alert">
+                <strong th:text="${#fields.errors('firstName')[0]}"></strong>
+            </span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="lastName" class="col-md-2 col-form-label text-md-right">Last Name</label>
+        <div class="col-md-8">
+            <input id="lastName" type="text" class="form-control" name="lastName" th:errorclass="is-invalid" th:field="*{lastName}"/>
+
+            <span th:if="${#fields.hasErrors('lastName')}" class="invalid-feedback" role="alert">
+                <strong th:text="${#fields.errors('lastName')[0]}"></strong>
+            </span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="email" class="col-md-2 col-form-label text-md-right">Email</label>
+        <div class="col-md-8">
+            <input id="email" type="email" class="form-control" name="email" th:errorclass="is-invalid" th:field="*{email}"/>
+
+            <span th:if="${#fields.hasErrors('email')}" class="invalid-feedback" role="alert">
+                <strong th:text="${#fields.errors('email')[0]}"></strong>
+            </span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

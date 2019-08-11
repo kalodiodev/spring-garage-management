@@ -1,6 +1,8 @@
 package eu.kalodiodev.garage_management.controllers;
 
 import eu.kalodiodev.garage_management.command.UserCommand;
+import eu.kalodiodev.garage_management.command.UserInfoCommand;
+import eu.kalodiodev.garage_management.converter.UserToUserInfoCommand;
 import eu.kalodiodev.garage_management.domains.User;
 import eu.kalodiodev.garage_management.exceptions.NotFoundException;
 import eu.kalodiodev.garage_management.services.UserService;
@@ -18,13 +20,16 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserControllerTest {
+
+    @Mock
+    private UserToUserInfoCommand userToUserInfoCommand;
 
     @Mock
     private UserService userService;
@@ -186,5 +191,39 @@ public class UserControllerTest {
                 .andExpect(flash().attributeExists("message"));
 
         verify(userService).delete(1L);
+    }
+
+    @Test
+    void initEditUser() throws Exception {
+        UserInfoCommand userInfoCommand = new UserInfoCommand();
+        userInfoCommand.setId(1L);
+        userInfoCommand.setEmail("test@example.com");
+
+        when(userService.findInfoCommandById(anyLong())).thenReturn(userInfoCommand);
+
+        mockMvc.perform(get("/users/1/edit"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("user/edit"))
+                .andExpect(model().attributeExists("userInfoCommand"))
+                .andExpect(model().attributeExists("passwordCommand"));
+    }
+
+    @Test
+    void updateUserInfo() throws Exception {
+        User user = new User();
+        user.setId(1L);
+
+        when(userService.findById(1L)).thenReturn(user);
+
+        mockMvc.perform(patch("/users/1")
+                .param("email", "test@example.com")
+                .param("firstName", "John")
+                .param("lastName", "Doe")
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/users/1"))
+                .andExpect(flash().attributeExists("message"));
+
+        verify(userService, times(1)).updateUserInfo(any(User.class), any(UserInfoCommand.class));
     }
 }

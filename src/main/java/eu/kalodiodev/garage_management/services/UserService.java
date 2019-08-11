@@ -11,6 +11,8 @@ public interface UserService {
 
     User findById(Long id);
 
+    UserInfoCommand findInfoCommandById(Long id);
+
     List<User> all();
 
     User save(User user);

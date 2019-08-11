@@ -1,16 +1,16 @@
 package eu.kalodiodev.garage_management.controllers;
 
+import eu.kalodiodev.garage_management.command.PasswordCommand;
 import eu.kalodiodev.garage_management.command.UserCommand;
+import eu.kalodiodev.garage_management.command.UserInfoCommand;
+import eu.kalodiodev.garage_management.converter.UserToUserInfoCommand;
 import eu.kalodiodev.garage_management.domains.User;
 import eu.kalodiodev.garage_management.services.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -21,11 +21,14 @@ public class UserController {
     private static final String VIEW_USERS_INDEX = "user/index";
     private static final String VIEW_USER_SHOW = "user/show";
     private static final String VIEW_USER_CREATE = "user/create";
+    private static final String VIEW_USER_EDIT = "user/edit";
 
     private final UserService userService;
+    private final UserToUserInfoCommand userToUserInfoCommand;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserToUserInfoCommand userToUserInfoCommand) {
         this.userService = userService;
+        this.userToUserInfoCommand = userToUserInfoCommand;
     }
 
     @GetMapping("/users")
@@ -75,5 +78,24 @@ public class UserController {
         redirectAttributes.addFlashAttribute("message", "User deleted");
 
         return "redirect:/users";
+    }
+
+    @GetMapping("/users/{id}/edit")
+    public String editUser(@PathVariable Long id, Model model) {
+        model.addAttribute("userInfoCommand", userService.findInfoCommandById(id));
+        model.addAttribute("passwordCommand", new PasswordCommand());
+
+        return VIEW_USER_EDIT;
+    }
+
+    @PatchMapping("/users/{id}")
+    public String updateUserInfo(@PathVariable Long id, UserInfoCommand userInfoCommand, RedirectAttributes redirectAttributes) {
+        User user = userService.findById(id);
+
+        userService.updateUserInfo(user, userInfoCommand);
+
+        redirectAttributes.addFlashAttribute("message", "User Info updated");
+
+        return "redirect:/users/" + user.getId();
     }
 }

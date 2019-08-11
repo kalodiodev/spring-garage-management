@@ -4,6 +4,7 @@ import eu.kalodiodev.garage_management.command.PasswordCommand;
 import eu.kalodiodev.garage_management.command.UserCommand;
 import eu.kalodiodev.garage_management.command.UserInfoCommand;
 import eu.kalodiodev.garage_management.converter.UserCommandToUser;
+import eu.kalodiodev.garage_management.converter.UserToUserInfoCommand;
 import eu.kalodiodev.garage_management.domains.Role;
 import eu.kalodiodev.garage_management.domains.User;
 import eu.kalodiodev.garage_management.exceptions.NotFoundException;
@@ -29,6 +30,9 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class JpaUserServiceTest {
+
+    @Mock
+    UserToUserInfoCommand userToUserInfoCommand;
 
     @Mock
     UserRepository userRepository;
@@ -86,6 +90,18 @@ public class JpaUserServiceTest {
         when(userRepository.findById(USER_1_ID)).thenReturn(Optional.of(user1));
 
         assertEquals(user1, userService.findById(USER_1_ID));
+    }
+
+    @Test
+    void find_user_info_command_by_id() {
+        UserInfoCommand userInfoCommand = new UserInfoCommand();
+        userInfoCommand.setId(USER_1_ID);
+        userInfoCommand.setEmail(user1.getEmail());
+
+        when(userRepository.findById(USER_1_ID)).thenReturn(Optional.of(user1));
+        when(userToUserInfoCommand.convert(user1)).thenReturn(userInfoCommand);
+
+        assertEquals(userInfoCommand, userService.findInfoCommandById(USER_1_ID));
     }
 
     @Test

@@ -4,6 +4,7 @@ import eu.kalodiodev.garage_management.command.PasswordCommand;
 import eu.kalodiodev.garage_management.command.UserCommand;
 import eu.kalodiodev.garage_management.command.UserInfoCommand;
 import eu.kalodiodev.garage_management.converter.UserCommandToUser;
+import eu.kalodiodev.garage_management.converter.UserToUserInfoCommand;
 import eu.kalodiodev.garage_management.domains.User;
 import eu.kalodiodev.garage_management.exceptions.NotFoundException;
 import eu.kalodiodev.garage_management.repositories.UserRepository;
@@ -22,12 +23,19 @@ public class JpaUserServiceImpl implements UserService {
     private final UserCommandToUser userCommandToUser;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
+    private final UserToUserInfoCommand userToUserInfoCommand;
 
-    public JpaUserServiceImpl(UserRepository userRepository, UserCommandToUser userCommandToUser, PasswordEncoder passwordEncoder, RoleService roleService) {
+    public JpaUserServiceImpl(UserRepository userRepository,
+                              UserCommandToUser userCommandToUser,
+                              PasswordEncoder passwordEncoder,
+                              RoleService roleService,
+                              UserToUserInfoCommand userToUserInfoCommand) {
+
         this.userRepository = userRepository;
         this.userCommandToUser = userCommandToUser;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
+        this.userToUserInfoCommand = userToUserInfoCommand;
     }
 
     @Override
@@ -39,6 +47,11 @@ public class JpaUserServiceImpl implements UserService {
         }
 
         return userOptional.get();
+    }
+
+    @Override
+    public UserInfoCommand findInfoCommandById(Long id) {
+        return userToUserInfoCommand.convert(findById(id));
     }
 
     @Override
