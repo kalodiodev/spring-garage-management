@@ -2,6 +2,7 @@ package eu.kalodiodev.garage_management.controllers;
 
 import eu.kalodiodev.garage_management.command.PasswordCommand;
 import eu.kalodiodev.garage_management.command.UserInfoCommand;
+import eu.kalodiodev.garage_management.converter.UserToUserInfoCommand;
 import eu.kalodiodev.garage_management.domains.User;
 import eu.kalodiodev.garage_management.services.UserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,20 +23,17 @@ public class ProfileController {
     private static final String EDIT_PROFILE_VIEW = "profile/edit";
 
     private final UserService userService;
+    private final UserToUserInfoCommand userToUserInfoCommand;
 
-    public ProfileController(UserService userService) {
+    public ProfileController(UserService userService, UserToUserInfoCommand userToUserInfoCommand) {
         this.userService = userService;
+        this.userToUserInfoCommand = userToUserInfoCommand;
     }
 
     @RequestMapping("/profile")
     public String editProfile(Model model, @AuthenticationPrincipal User user) {
 
-        UserInfoCommand userInfoCommand = new UserInfoCommand();
-        userInfoCommand.setId(user.getId());
-        userInfoCommand.setEmail(user.getEmail());
-        userInfoCommand.setFirstName(user.getFirstName());
-        userInfoCommand.setLastName(user.getLastName());
-
+        UserInfoCommand userInfoCommand = userToUserInfoCommand.convert(user);
 
         model.addAttribute("userInfoCommand", userInfoCommand);
         model.addAttribute("passwordCommand", new PasswordCommand());
@@ -74,6 +72,7 @@ public class ProfileController {
                                  RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
+
             userInfoCommand.setId(user.getId());
             userInfoCommand.setEmail(user.getEmail());
             userInfoCommand.setFirstName(user.getFirstName());

@@ -1,6 +1,7 @@
 package eu.kalodiodev.garage_management.controllers;
 
 import eu.kalodiodev.garage_management.command.UserInfoCommand;
+import eu.kalodiodev.garage_management.converter.UserToUserInfoCommand;
 import eu.kalodiodev.garage_management.domains.User;
 import eu.kalodiodev.garage_management.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +25,9 @@ public class ProfileControllerTest {
     @Mock
     private UserService userService;
 
+    @Mock
+    private UserToUserInfoCommand userToUserInfoCommand;
+
     @InjectMocks
     private ProfileController controller;
 
@@ -38,6 +42,8 @@ public class ProfileControllerTest {
 
     @Test
     void edit_profile() throws Exception {
+        when(userToUserInfoCommand.convert(any(User.class))).thenReturn(new UserInfoCommand());
+
         mockMvc.perform(get("/profile"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("profile/edit"))
