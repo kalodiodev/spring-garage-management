@@ -272,4 +272,43 @@ public class UserControllerTest {
         mockMvc.perform(patch("/users/1").param("email", "test2@example.com"))
                 .andExpect(model().attributeHasFieldErrors("userInfoCommand", "email"));
     }
+
+    @Test
+    void update_user_validate_password() throws Exception {
+        when(userService.findById(anyLong())).thenReturn(new User());
+
+        // No errors
+        mockMvc.perform(patch("/users/1/password")
+                .param("password", "12345678")
+                .param("passwordConfirm", "12345678")
+        )
+                .andExpect(model().hasNoErrors());
+
+        // Password confirm required
+        mockMvc.perform(patch("/users/1/password")
+                .param("password", "12345678")
+                .param("passwordConfirm", "")
+        )
+                .andExpect(model().attributeHasFieldErrors("passwordCommand", "passwordConfirm"));
+
+        // Password required
+        mockMvc.perform(patch("/users/1/password").param("password", ""))
+                .andExpect(model().attributeHasFieldErrors("passwordCommand", "password"));
+
+        // Password must be at least 8 chars long
+        mockMvc.perform(patch("/users/1/password").param("password", "1234567"))
+                .andExpect(model().attributeHasFieldErrors("passwordCommand", "password"));
+
+        // Password Confirm must be at least 8 chars long
+        mockMvc.perform(patch("/users/1/password").param("passwordConfirm", "1234567"))
+                .andExpect(model().attributeHasFieldErrors("passwordCommand", "passwordConfirm"));
+
+        // Password and Password confirm should match
+        mockMvc.perform(patch("/users/1/password")
+                .param("password", "12345678")
+                .param("passwordConfirm", "13244343")
+        )
+                .andExpect(model().attributeHasErrors("passwordCommand"));
+
+    }
 }

@@ -3,7 +3,6 @@ package eu.kalodiodev.garage_management.controllers;
 import eu.kalodiodev.garage_management.command.PasswordCommand;
 import eu.kalodiodev.garage_management.command.UserCommand;
 import eu.kalodiodev.garage_management.command.UserInfoCommand;
-import eu.kalodiodev.garage_management.converter.UserToUserInfoCommand;
 import eu.kalodiodev.garage_management.domains.User;
 import eu.kalodiodev.garage_management.services.UserService;
 import org.springframework.stereotype.Controller;
@@ -112,8 +111,22 @@ public class UserController {
     }
 
     @PatchMapping("/users/{id}/password")
-    public String updateUserPassword(@PathVariable Long id, PasswordCommand passwordCommand, RedirectAttributes redirectAttributes) {
+    public String updateUserPassword(@PathVariable Long id,
+                                     @Valid PasswordCommand passwordCommand,
+                                     BindingResult bindingResult,
+                                     @ModelAttribute UserInfoCommand userInfoCommand,
+                                     RedirectAttributes redirectAttributes) {
+
         User user = userService.findById(id);
+
+        if (bindingResult.hasErrors()) {
+            userInfoCommand.setId(user.getId());
+            userInfoCommand.setEmail(user.getEmail());
+            userInfoCommand.setFirstName(user.getFirstName());
+            userInfoCommand.setLastName(user.getLastName());
+
+            return VIEW_USER_EDIT;
+        }
 
         userService.updatePassword(user, passwordCommand);
 
