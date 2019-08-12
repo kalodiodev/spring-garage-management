@@ -24,11 +24,9 @@ public class UserController {
     private static final String VIEW_USER_EDIT = "user/edit";
 
     private final UserService userService;
-    private final UserToUserInfoCommand userToUserInfoCommand;
 
-    public UserController(UserService userService, UserToUserInfoCommand userToUserInfoCommand) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.userToUserInfoCommand = userToUserInfoCommand;
     }
 
     @GetMapping("/users")
@@ -89,8 +87,22 @@ public class UserController {
     }
 
     @PatchMapping("/users/{id}")
-    public String updateUserInfo(@PathVariable Long id, UserInfoCommand userInfoCommand, RedirectAttributes redirectAttributes) {
+    public String updateUserInfo(@PathVariable Long id,
+                                 @Valid UserInfoCommand userInfoCommand,
+                                 BindingResult bindingResult,
+                                 @ModelAttribute PasswordCommand passwordCommand,
+                                 RedirectAttributes redirectAttributes) {
+
         User user = userService.findById(id);
+
+        if (userService.isEmailAlreadyInUseExceptUser(userInfoCommand.getEmail(), user)) {
+            FieldError fieldError = new FieldError("userInfoCommand", "email", userInfoCommand.getEmail(), false, null, null, "Email already in use");
+            bindingResult.addError(fieldError);
+        }
+
+        if (bindingResult.hasErrors()) {
+            return VIEW_USER_EDIT;
+        }
 
         userService.updateUserInfo(user, userInfoCommand);
 

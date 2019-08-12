@@ -243,4 +243,33 @@ public class UserControllerTest {
 
         verify(userService, times(1)).updatePassword(any(User.class), any(PasswordCommand.class));
     }
+
+    @Test
+    void update_user_validate_name() throws Exception {
+        mockMvc.perform(patch("/users/1")
+                .param("email", "test@example.com")
+                .param("firstName", "")
+                .param("lastName", "")
+        )
+                .andExpect(model().attributeHasFieldErrors("userInfoCommand", "firstName"))
+                .andExpect(model().attributeHasFieldErrors("userInfoCommand", "lastName"));
+    }
+
+    @Test
+    void update_user_validate_email() throws Exception {
+        when(userService.findById(anyLong())).thenReturn(new User());
+
+        // Empty Email
+        mockMvc.perform(patch("/users/1").param("email", ""))
+                .andExpect(model().attributeHasFieldErrors("userInfoCommand", "email"));
+
+        // Not valid email format
+        mockMvc.perform(patch("/users/1").param("email", "notemail"))
+                .andExpect(model().attributeHasFieldErrors("userInfoCommand", "email"));
+
+        // Email already in use by other user
+        when(userService.isEmailAlreadyInUseExceptUser(anyString(), any(User.class))).thenReturn(true);
+        mockMvc.perform(patch("/users/1").param("email", "test2@example.com"))
+                .andExpect(model().attributeHasFieldErrors("userInfoCommand", "email"));
+    }
 }
