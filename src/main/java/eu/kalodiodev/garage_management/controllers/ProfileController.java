@@ -9,7 +9,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,15 +17,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 
 @Controller
-public class ProfileController {
+public class ProfileController extends BaseUserController {
 
     private static final String EDIT_PROFILE_VIEW = "profile/edit";
 
-    private final UserService userService;
     private final UserToUserInfoCommand userToUserInfoCommand;
 
     public ProfileController(UserService userService, UserToUserInfoCommand userToUserInfoCommand) {
-        this.userService = userService;
+        super(userService);
         this.userToUserInfoCommand = userToUserInfoCommand;
     }
 
@@ -48,12 +46,7 @@ public class ProfileController {
                                 @ModelAttribute("passwordCommand")PasswordCommand passwordCommand,
                                 RedirectAttributes redirectAttributes) {
 
-        if (userService.isEmailAlreadyInUseExceptUser(userInfoCommand.getEmail(), user)) {
-            FieldError fieldError = new FieldError("userInfoCommand", "email", userInfoCommand.getEmail(), false, null, null, "Email already in use");
-            bindingResult.addError(fieldError);
-        }
-
-        if (bindingResult.hasErrors()) {
+        if (userInfoErrors(user, userInfoCommand.getEmail(), "userInfoCommand", bindingResult)) {
             return EDIT_PROFILE_VIEW;
         }
 
@@ -71,13 +64,7 @@ public class ProfileController {
                                  @ModelAttribute("userInfoCommand")UserInfoCommand userInfoCommand,
                                  RedirectAttributes redirectAttributes) {
 
-        if (bindingResult.hasErrors()) {
-
-            userInfoCommand.setId(user.getId());
-            userInfoCommand.setEmail(user.getEmail());
-            userInfoCommand.setFirstName(user.getFirstName());
-            userInfoCommand.setLastName(user.getLastName());
-
+        if (passwordErrors(user, userInfoCommand, bindingResult)) {
             return EDIT_PROFILE_VIEW;
         }
 

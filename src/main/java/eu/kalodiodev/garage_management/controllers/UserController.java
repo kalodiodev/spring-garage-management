@@ -8,24 +8,21 @@ import eu.kalodiodev.garage_management.services.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
 @Controller
-public class UserController {
+public class UserController extends BaseUserController {
 
     private static final String VIEW_USERS_INDEX = "user/index";
     private static final String VIEW_USER_SHOW = "user/show";
     private static final String VIEW_USER_CREATE = "user/create";
     private static final String VIEW_USER_EDIT = "user/edit";
 
-    private final UserService userService;
-
     public UserController(UserService userService) {
-        this.userService = userService;
+        super(userService);
     }
 
     @GetMapping("/users")
@@ -52,12 +49,7 @@ public class UserController {
     @PostMapping("/users")
     public String storeUser(@Valid UserCommand userCommand, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
-        if (userService.isEmailAlreadyInUse(userCommand.getEmail())) {
-            FieldError fieldError = new FieldError("userCommand", "email", "Email already in use");
-            bindingResult.addError(fieldError);
-        }
-
-        if (bindingResult.hasErrors()) {
+        if (userInfoErrors(userCommand.getEmail(), "userCommand", bindingResult)) {
             return VIEW_USER_CREATE;
         }
 
@@ -94,12 +86,7 @@ public class UserController {
 
         User user = userService.findById(id);
 
-        if (userService.isEmailAlreadyInUseExceptUser(userInfoCommand.getEmail(), user)) {
-            FieldError fieldError = new FieldError("userInfoCommand", "email", userInfoCommand.getEmail(), false, null, null, "Email already in use");
-            bindingResult.addError(fieldError);
-        }
-
-        if (bindingResult.hasErrors()) {
+        if (userInfoErrors(user, userInfoCommand.getEmail(), "userInfoCommand", bindingResult)) {
             return VIEW_USER_EDIT;
         }
 
@@ -119,12 +106,7 @@ public class UserController {
 
         User user = userService.findById(id);
 
-        if (bindingResult.hasErrors()) {
-            userInfoCommand.setId(user.getId());
-            userInfoCommand.setEmail(user.getEmail());
-            userInfoCommand.setFirstName(user.getFirstName());
-            userInfoCommand.setLastName(user.getLastName());
-
+        if (passwordErrors(user, userInfoCommand, bindingResult)) {
             return VIEW_USER_EDIT;
         }
 
